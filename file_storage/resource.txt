@@ -1,0 +1,43 @@
+外键
+https://www.runoob.com/sql/sql-foreignkey.html
+外键笔记
+http://glassysky.cn:8080/2023/03/10/sql%e7%ba%a6%e6%9d%9f%e4%b8%8e%e8%a1%a8%e5%85%b3%e8%81%94/
+
+class absFact:
+    def create(self):
+        pass
+    def createProduct(self):
+        pass
+    def register(self):
+        pass
+
+class idFact(absFact):
+    def create(self):
+        print("prepare to create a id card")
+    def createProduct(self):
+        print("create real id card")
+    def register(self):
+        print("register id card fact")
+
+class clothFact(absFact):
+    def create(self):
+        print("prepare to create a cloth")
+    def createProduct(self):
+        print("create real cloth card")
+    def register(self):
+        print("register cloth fact")
+
+
+#生产产品业务
+
+def create3pro(fact):
+    fact.create()
+    fact.register()
+    for i in range(3):
+        fact.createProduct()
+
+a = idFact()
+b = clothFact()
+
+create3pro(a)
+create3pro(b)

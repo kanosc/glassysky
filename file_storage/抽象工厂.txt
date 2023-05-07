@@ -1,0 +1,91 @@
+'''
+class absFact:
+    def create(self):
+        pass
+    def createProduct(self):
+        pass
+    def register(self):
+        pass
+
+class idFact(absFact):
+    def create(self):
+        print("prepare to create a id card")
+    def createProduct(self):
+        print("create real id card")
+    def register(self):
+        print("register id card fact")
+
+class clothFact(absFact):
+    def create(self):
+        print("prepare to create a cloth")
+    def createProduct(self):
+        print("create real cloth card")
+    def register(self):
+        print("register cloth fact")
+
+
+#生产产品业务
+#操作接口加调用逻辑
+def create3pro(fact):
+    fact.create()
+    fact.register()
+    for i in range(3):
+        fact.createProduct()
+
+#创建具体工厂
+a = idFact()
+b = clothFact()
+
+#实际调用
+create3pro(a)
+create3pro(b)
+'''
+class abstractFact:
+    #输入名字返回(字符串)具体工厂（对象）
+    def getInstance(self, factName):
+        return globals()[factName]()
+
+        
+    def create(self):
+        pass
+    def createProduct(self):
+        pass
+    def register(self):
+        pass
+
+class idFact(abstractFact):
+    def create(self):
+        print("prepare to create a id card")
+    def createProduct(self):
+        print("create real id card")
+    def register(self):
+        print("register id card fact")
+
+class clothFact(abstractFact):
+    def create(self):
+        print("prepare to create a cloth")
+    def createProduct(self):
+        print("create real cloth")
+    def register(self):
+        print("register cloth fact")
+
+
+#生产产品业务
+#操作接口加调用逻辑
+def create3pro(fact):
+    fact.create()
+    fact.register()
+    for i in range(3):
+        fact.createProduct()
+
+
+print('please select factory:')
+factoryName = input()
+
+#创建具体工厂
+a = abstractFact().getInstance(factoryName)
+#b = clothFact()
+
+#实际调用
+create3pro(a)
+#create3pro(b)

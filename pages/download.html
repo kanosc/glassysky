@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>文件下载</title>
+    <link rel="stylesheet" type="text/css" href="../pages/download_style.css">
+</head>
+<body class="services-section">
+<div class="fav_list">
+    <div class="fav_list_box">
+        <h1>download</h1>
+        <div class="my_fav_con">
+            <ul class="my_fav_list">
+                {{ range .files }}
+                <li class="my_fav_list_li">
+                    <a class="my_fav_list_a" href="https://glassysky.cn/resource/{{ . }}">{{ . }}</a>
+                    <label>
+                        <a class="my_fav_list_label" href="https://glassysky.cn/delete?filename={{ . }}">删除文件</a>
+                    </label>
+                </li>
+                {{ end }}
+            </ul>
+
+        </div>
+    </div>
+</div>
+</body>
+</html>

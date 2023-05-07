@@ -13,6 +13,46 @@ import (
 	"github.com/google/uuid"
 )
 
+func CookieChecker() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		cookie, err := c.Cookie("UserCookie")
+		log.Println("client cookie is", cookie)
+		session := sessions.Default(c)
+		cookieExist, _ := session.Get(cookie).(bool)
+		log.Println(cookieExist)
+		log.Println(session.Get(cookie))
+
+		if err != nil || cookieExist != true {
+			c.HTML(http.StatusOK, "loginUpload.html", gin.H{
+				"title":  "Main website",
+				"action": "uploadVerify",
+			})
+			c.Abort()
+		}
+		c.Next()
+	}
+}
+
+func CookieChecker2() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		cookie, err := c.Cookie("UserCookie")
+		log.Println("client cookie is", cookie)
+		session := sessions.Default(c)
+		cookieExist, _ := session.Get(cookie).(bool)
+		log.Println(cookieExist)
+		log.Println(session.Get(cookie))
+
+		if err != nil || cookieExist != true {
+			c.HTML(http.StatusOK, "loginUpload.html", gin.H{
+				"title":  "Main website",
+				"action": "downloadVerify",
+			})
+			c.Abort()
+		}
+		c.Next()
+	}
+}
+
 func handleIndex(c *gin.Context) {
 	c.HTML(http.StatusOK, "index.html", gin.H{
 		"title": "Main website",
@@ -43,30 +83,9 @@ func handleLoginUpload(c *gin.Context) {
 	})
 }
 
-func CookieChecker() gin.HandlerFunc {
-	return func(c *gin.Context) {
-		cookie, err := c.Cookie("UserCookie")
-		log.Println("client cookie is", cookie)
-		session := sessions.Default(c)
-		cookieExist, _ := session.Get(cookie).(bool)
-		log.Println(cookieExist)
-		log.Println(session.Get(cookie))
-
-		if err != nil || cookieExist != true {
-			c.HTML(http.StatusOK, "loginUpload.html", gin.H{
-				"title": "Main website",
-			})
-			c.Abort()
-		}
-		c.Next()
-	}
-}
-
 func handleLoginDownload(c *gin.Context) {
 	log.Println("recive request")
-	c.HTML(http.StatusOK, "loginDownload.html", gin.H{
-		"title": "Main website",
-	})
+	handleDownload(c)
 }
 
 func setCookieDefault(c *gin.Context, cookieName string, cookieValue string) {
@@ -88,29 +107,22 @@ func setCookieDefault(c *gin.Context, cookieName string, cookieValue string) {
 }
 
 func handleVerifyUpload(c *gin.Context) {
+	handleVerifyAuth(c, "test", "file123", handleFile)
+}
+
+func handleVerifyDownload(c *gin.Context) {
+	handleVerifyAuth(c, "test", "file123", handleDownload)
+}
+
+func handleVerifyAuth(c *gin.Context, name string, pwd string, next func(c *gin.Context)) {
 	log.Println("recive request")
 	username := c.PostForm("username")
 	password := c.PostForm("password")
 	cookieName := "UserCookie"
-	if username == "test" && password == "upload" {
+	if username == name && password == pwd {
 		clientUUID, _ := uuid.NewUUID()
 		setCookieDefault(c, cookieName, clientUUID.String())
-		handleFile(c)
-	} else {
-		c.String(http.StatusForbidden, fmt.Sprintf("Name or password is wrong"))
-	}
-	log.Println(username, password)
-}
-
-func handleVerifyDownload(c *gin.Context) {
-	log.Println("recive request")
-	username := c.PostForm("username")
-	password := c.PostForm("password")
-	cookieName := "UserDownload"
-	if username == "test" && password == "download" {
-		clientUUID, _ := uuid.NewUUID()
-		setCookieDefault(c, cookieName, clientUUID.String())
-		handleDownload(c)
+		next(c)
 	} else {
 		c.String(http.StatusForbidden, fmt.Sprintf("Name or password is wrong"))
 	}

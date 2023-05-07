@@ -31,7 +31,7 @@ func main() {
 	router.GET("/download", handleDownload)
 	router.POST("/upload", CookieChecker(), handleUpload)
 	router.GET("/loginUpload", CookieChecker(), handleLoginUpload)
-	router.GET("/loginDownload", handleLoginDownload)
+	router.GET("/loginDownload", CookieChecker2(), handleLoginDownload)
 	router.POST("/uploadVerify", handleVerifyUpload)
 	router.POST("/downloadVerify", handleVerifyDownload)
 	router.GET("/delete", handleDelete)

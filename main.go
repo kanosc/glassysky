@@ -1,21 +1,21 @@
 package main
 
 import (
-	"net/http"
-	"github.com/gin-gonic/gin"
-	"github.com/gin-gonic/autotls"
-	"log"
-	"golang.org/x/crypto/acme/autocert"
 	"crypto/rand"
-	"math/big"
-	"time"
 	"fmt"
-	"path/filepath"
-	"os"
-	"strings"
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-contrib/sessions/cookie"
+	"github.com/gin-gonic/autotls"
+	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
+	"golang.org/x/crypto/acme/autocert"
+	"log"
+	"math/big"
+	"net/http"
+	"os"
+	"path/filepath"
+	"strings"
+	"time"
 )
 
 const (
@@ -42,20 +42,20 @@ func handleStart(c *gin.Context) {
 }
 
 func rollInt(end int64) int {
-    ret, _ := rand.Int(rand.Reader, big.NewInt(end+1))
-    return int(ret.Int64())
+	ret, _ := rand.Int(rand.Reader, big.NewInt(end+1))
+	return int(ret.Int64())
 }
 
 func handleToday(c *gin.Context) {
-    log.Println("recive request")
-    randNum := rollInt(int64(8))
-    c.HTML(http.StatusOK, "today.html", gin.H{
-        "title":     todayLuck[randNum],
-        "content":   todayContent[randNum],
-        "yiThing":   yiThing[randNum],
-        "buyiThing": buyiThing[randNum],
-	"date": getDateStr(),
-    })
+	log.Println("recive request")
+	randNum := rollInt(int64(8))
+	c.HTML(http.StatusOK, "today.html", gin.H{
+		"title":     todayLuck[randNum],
+		"content":   todayContent[randNum],
+		"yiThing":   yiThing[randNum],
+		"buyiThing": buyiThing[randNum],
+		"date":      getDateStr(),
+	})
 }
 
 func handleLoginUpload(c *gin.Context) {
@@ -91,23 +91,22 @@ func handleLoginDownload(c *gin.Context) {
 }
 
 func setCookieDefault(c *gin.Context, cookieName string, cookieValue string) {
-    cookie, err := c.Cookie(cookieName)
-    if err != nil {
-        c.SetCookie(cookieName, cookieValue, 1800, "", "", false, true)
+	cookie, err := c.Cookie(cookieName)
+	if err != nil {
+		c.SetCookie(cookieName, cookieValue, 1800, "", "", false, true)
 
-        session := sessions.Default(c)
-        session.Options(sessions.Options{MaxAge: 1800})
-        session.Set(cookieValue, true)
-        session.Save()
+		session := sessions.Default(c)
+		session.Options(sessions.Options{MaxAge: 1800})
+		session.Set(cookieValue, true)
+		session.Save()
 
-        log.Printf("Set new cookie value: %s \n", cookieValue)
-    } else {
-        log.Printf("Cookie value: %s \n", cookie)
+		log.Printf("Set new cookie value: %s \n", cookieValue)
+	} else {
+		log.Printf("Cookie value: %s \n", cookie)
 
-    }
+	}
 
 }
-
 
 func handleVerifyUpload(c *gin.Context) {
 	log.Println("recive request")
@@ -274,12 +273,11 @@ func handleDelete(c *gin.Context) {
 
 }
 
-
 func main() {
 
 	router := gin.Default()
 	store := cookie.NewStore([]byte("secret"))
-    router.Use(sessions.Sessions("mysession", store))
+	router.Use(sessions.Sessions("mysession", store))
 	router.StaticFS("/pages/", http.Dir("pages"))
 	router.StaticFS("/resource/", http.Dir("file_storage"))
 	//router.LoadHTMLGlob("pages/*")

@@ -34,7 +34,7 @@ func main() {
 	router.GET("/loginDownload", CookieChecker2(), handleLoginDownload)
 	router.POST("/uploadVerify", handleVerifyUpload)
 	router.POST("/downloadVerify", handleVerifyDownload)
-	router.GET("/delete", handleDelete)
+	router.GET("/delete", CookieChecker2(), handleDelete)
 	//router.Run(":80")
 	//router.RunTLS(":443", "./cert/cert.crt", "./cert/rsa_private.key")
 	m := autocert.Manager{

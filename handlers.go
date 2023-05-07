@@ -23,7 +23,7 @@ func CookieChecker() gin.HandlerFunc {
 		log.Println(session.Get(cookie))
 
 		if err != nil || cookieExist != true {
-			c.HTML(http.StatusOK, "loginUpload.html", gin.H{
+			c.HTML(http.StatusOK, "login.html", gin.H{
 				"title":  "Main website",
 				"action": "uploadVerify",
 			})
@@ -43,7 +43,7 @@ func CookieChecker2() gin.HandlerFunc {
 		log.Println(session.Get(cookie))
 
 		if err != nil || cookieExist != true {
-			c.HTML(http.StatusOK, "loginUpload.html", gin.H{
+			c.HTML(http.StatusOK, "login.html", gin.H{
 				"title":  "Main website",
 				"action": "downloadVerify",
 			})
@@ -193,21 +193,10 @@ func handleDownload(c *gin.Context) {
 }
 
 func handleDelete(c *gin.Context) {
-	cookie, err := c.Cookie("UserDownload")
-	log.Println("client cookie is", cookie)
-	session := sessions.Default(c)
-	cookieExist, _ := session.Get(cookie).(bool)
-
-	if err != nil || cookieExist != true {
-		c.HTML(http.StatusOK, "loginDownload.html", gin.H{
-			"title": "Main website",
-		})
-		return
-	}
-
 	filename := c.Query("filename")
 	if flg, _ := fileExistInDir("./file_storage/", filename); !flg {
 		c.String(http.StatusForbidden, fmt.Sprintf("Filename not exist."))
+		c.Abort()
 		return
 	}
 	err = os.Remove("./file_storage/" + filename)

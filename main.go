@@ -23,7 +23,7 @@ func main() {
 	router.StaticFS("/pages/", http.Dir("pages"))
 	router.StaticFS("/resource/", http.Dir("file_storage"))
 	//router.LoadHTMLGlob("pages/*")
-	router.LoadHTMLFiles("pages/loginUpload.html", "pages/loginDownload.html", "pages/download.html", "pages/upload.html", "pages/start.html", "pages/index.html", "pages/today.html")
+	router.LoadHTMLFiles("pages/login.html", "pages/download.html", "pages/upload.html", "pages/start.html", "pages/index.html", "pages/today.html")
 	router.GET("/", handleStart)
 	router.GET("/index", handleIndex)
 	router.GET("/today", handleToday)

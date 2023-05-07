@@ -199,7 +199,7 @@ func handleDelete(c *gin.Context) {
 		c.Abort()
 		return
 	}
-	err = os.Remove("./file_storage/" + filename)
+	err := os.Remove("./file_storage/" + filename)
 	if err != nil {
 		log.Println(err.Error())
 	} else {

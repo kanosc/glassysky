@@ -106,12 +106,10 @@ func setCookieDefault(c *gin.Context, cookieName string, cookieValue string) {
 
 }
 
-func handleVerifyUpload(c *gin.Context) {
-	handleVerifyAuth(c, "test", "file123", handleFile)
-}
-
-func handleVerifyDownload(c *gin.Context) {
-	handleVerifyAuth(c, "test", "file123", handleDownload)
+func makeAuthVerifyHandler(name string, pwd string, handler func(c *gin.Context)) func(*gin.Context){
+	return func(c *gin.Context) {
+		handleVerifyAuth(c, name, pwd, handler)
+	}
 }
 
 func handleVerifyAuth(c *gin.Context, name string, pwd string, next func(c *gin.Context)) {

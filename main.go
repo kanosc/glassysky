@@ -4,11 +4,12 @@ import (
 	"log"
 	"net/http"
 
+	. "github.com/kanosc/glassysky/controller"
+
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-contrib/sessions/cookie"
 	"github.com/gin-gonic/autotls"
 	"github.com/gin-gonic/gin"
-	. "github.com/kanosc/glassysky/controller"
 	"golang.org/x/crypto/acme/autocert"
 )
 

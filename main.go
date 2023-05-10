@@ -13,10 +13,6 @@ import (
 	"golang.org/x/crypto/acme/autocert"
 )
 
-const (
-	MAX_DIR_SIZE = 500 * 1024 * 1024
-)
-
 func main() {
 
 	router := gin.Default()

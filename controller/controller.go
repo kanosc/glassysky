@@ -14,6 +14,10 @@ import (
 	. "github.com/kanosc/glassysky/common"
 )
 
+const (
+	MAX_DIR_SIZE = 500 * 1024 * 1024
+)
+
 func CookieChecker() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		cookie, err := c.Cookie("UserCookie")

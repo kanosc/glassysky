@@ -1,3 +1,3 @@
-module github.com/kanosc/glassysky/common
+module glassysky/common
 
 go 1.19

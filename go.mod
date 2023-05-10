@@ -20,7 +20,7 @@ require (
 	github.com/gorilla/securecookie v1.1.1 // indirect
 	github.com/gorilla/sessions v1.2.1 // indirect
 	github.com/json-iterator/go v1.1.12 // indirect
-	github.com/kanosc/glassysky/common v0.0.0-20230510164714-2384d5e0c270
+	github.com/kanosc/glassysky/common v0.0.0-20230510172034-fd336e6f1056
 	github.com/leodido/go-urn v1.2.1 // indirect
 	github.com/mattn/go-isatty v0.0.17 // indirect
 	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
@@ -35,4 +35,4 @@ require (
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 )
 
-replace github.com/kanosc/glassysky/common v0.0.0-20230510164714-2384d5e0c270 => ./common
+//replace github.com/kanosc/glassysky/common v0.0.0-20230510164714-2384d5e0c270 => ./common

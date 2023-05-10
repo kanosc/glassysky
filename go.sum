@@ -59,6 +59,8 @@ github.com/kanosc/glassysky/controller v0.0.0-20230510184723-40c7a2b1b3ec h1:cE8
 github.com/kanosc/glassysky/controller v0.0.0-20230510184723-40c7a2b1b3ec/go.mod h1:fqvnSHXCDFe4pplVAhxePafWgnO2UBpAtA9FueDrhhM=
 github.com/kanosc/glassysky/controller v0.0.0-20230510194551-8e63787338db h1:0M4cOOyWj15qMhOnBxdw/qmhesZWhuk8oQnziWes5z8=
 github.com/kanosc/glassysky/controller v0.0.0-20230510194551-8e63787338db/go.mod h1:fqvnSHXCDFe4pplVAhxePafWgnO2UBpAtA9FueDrhhM=
+github.com/kanosc/glassysky/controller v0.0.0-20230510200201-dff04fc4f3ff h1:K3Xdc4gm9Ky1P5be7bDjgajrfWL+MEMIiuTHK81vyWY=
+github.com/kanosc/glassysky/controller v0.0.0-20230510200201-dff04fc4f3ff/go.mod h1:fqvnSHXCDFe4pplVAhxePafWgnO2UBpAtA9FueDrhhM=
 github.com/klauspost/cpuid/v2 v2.0.9/go.mod h1:FInQzS24/EEf25PyTYn52gqo7WaD8xa0213Md/qVLRg=
 github.com/klauspost/cpuid/v2 v2.2.4 h1:acbojRNwl3o09bUq+yDCtZFc1aiwaAAxtcn8YkZXnvk=
 github.com/klauspost/cpuid/v2 v2.2.4/go.mod h1:RVVoqg1df56z8g3pUjL/3lE5UfnlrJX8tyFgg4nqhuY=

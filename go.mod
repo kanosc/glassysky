@@ -23,7 +23,7 @@ require (
 	github.com/gorilla/sessions v1.2.1 // indirect
 	github.com/json-iterator/go v1.1.12 // indirect
 	github.com/kanosc/glassysky/common v0.0.0-20230510194551-8e63787338db // indirect
-	github.com/kanosc/glassysky/controller v0.0.0-20230510194551-8e63787338db // indirect
+	github.com/kanosc/glassysky/controller v0.0.0-20230510200201-dff04fc4f3ff // indirect
 	github.com/klauspost/cpuid/v2 v2.2.4 // indirect
 	github.com/leodido/go-urn v1.2.4 // indirect
 	github.com/mattn/go-isatty v0.0.18 // indirect

@@ -1,4 +1,4 @@
-package main
+package controller
 
 var todayLuck = []string{"上吉", "中吉", "末吉", "上平", "中平", "末平", "大凶", "中凶", "末凶"}
 var todayContent = []string{

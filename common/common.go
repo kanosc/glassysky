@@ -1,4 +1,4 @@
-package main
+package common
 
 import (
 	"crypto/rand"
@@ -10,19 +10,19 @@ import (
 	"time"
 )
 
-func getDateStr() string {
+func GetDateStr() string {
 	t := time.Now()
 	weekday := []string{"日", "一", "二", "三", "四", "五", "六"}
 	date := fmt.Sprintf("%v年%v月%v日 星期%v", t.Year(), int(t.Month()), t.Day(), weekday[int(t.Weekday())])
 	return date
 }
 
-func rollInt(end int64) int {
+func RollInt(end int64) int {
 	ret, _ := rand.Int(rand.Reader, big.NewInt(end+1))
 	return int(ret.Int64())
 }
 
-func getDirSize(path string) (int64, error) {
+func GetDirSize(path string) (int64, error) {
 	var size int64
 	err := filepath.Walk(path, func(_ string, info os.FileInfo, err error) error {
 		if !info.IsDir() && info.Name() != "" {
@@ -33,7 +33,7 @@ func getDirSize(path string) (int64, error) {
 	return size, err
 }
 
-func getFileNameList(path string) []string {
+func GetFileNameList(path string) []string {
 	filenames := make([]string, 0)
 	filepath.Walk(path, func(_ string, info os.FileInfo, err error) error {
 		log.Println("###########", len(info.Name()))
@@ -49,7 +49,7 @@ func getFileNameList(path string) []string {
 	return filenames
 }
 
-func fileExistInDir(path, filename string) (bool, error) {
+func FileExistInDir(path, filename string) (bool, error) {
 	//	var fileExistFlag = false
 	/* err := filepath.Walk(path, func(_ string, info os.FileInfo, err error) error {
 		if info.Name() == filename {

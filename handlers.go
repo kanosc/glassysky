@@ -53,42 +53,42 @@ func CookieChecker2() gin.HandlerFunc {
 	}
 }
 
-func handleIndex(c *gin.Context) {
+func HandleIndex(c *gin.Context) {
 	c.HTML(http.StatusOK, "index.html", gin.H{
 		"title": "Main website",
 	})
 }
 
-func handleStart(c *gin.Context) {
+func HandleStart(c *gin.Context) {
 	c.HTML(http.StatusOK, "index.html", gin.H{
 		"title": "Main website",
 	})
 }
 
-func handleToday(c *gin.Context) {
+func HandleToday(c *gin.Context) {
 	log.Println("recive request")
-	randNum := rollInt(int64(8))
+	randNum := RollInt(int64(8))
 	c.HTML(http.StatusOK, "today.html", gin.H{
 		"title":     todayLuck[randNum],
 		"content":   todayContent[randNum],
 		"yiThing":   yiThing[randNum],
 		"buyiThing": buyiThing[randNum],
-		"date":      getDateStr(),
+		"date":      GetDateStr(),
 	})
 }
 
-func handleLoginUpload(c *gin.Context) {
+func HandleLoginUpload(c *gin.Context) {
 	c.HTML(http.StatusOK, "upload.html", gin.H{
 		"title": "Main website",
 	})
 }
 
-func handleLoginDownload(c *gin.Context) {
+func HandleLoginDownload(c *gin.Context) {
 	log.Println("recive request")
-	handleDownload(c)
+	HandleDownload(c)
 }
 
-func setCookieDefault(c *gin.Context, cookieName string, cookieValue string) {
+func SetCookieDefault(c *gin.Context, cookieName string, cookieValue string) {
 	cookie, err := c.Cookie(cookieName)
 	if err != nil {
 		c.SetCookie(cookieName, cookieValue, 1800, "", "", false, true)
@@ -106,20 +106,20 @@ func setCookieDefault(c *gin.Context, cookieName string, cookieValue string) {
 
 }
 
-func makeAuthVerifyHandler(name string, pwd string, handler func(c *gin.Context)) func(*gin.Context){
+func MakeAuthVerifyHandler(name string, pwd string, handler func(c *gin.Context)) func(*gin.Context) {
 	return func(c *gin.Context) {
-		handleVerifyAuth(c, name, pwd, handler)
+		HandleVerifyAuth(c, name, pwd, handler)
 	}
 }
 
-func handleVerifyAuth(c *gin.Context, name string, pwd string, next func(c *gin.Context)) {
+func HandleVerifyAuth(c *gin.Context, name string, pwd string, next func(c *gin.Context)) {
 	log.Println("recive request")
 	username := c.PostForm("username")
 	password := c.PostForm("password")
 	cookieName := "UserCookie"
 	if username == name && password == pwd {
 		clientUUID, _ := uuid.NewUUID()
-		setCookieDefault(c, cookieName, clientUUID.String())
+		SetCookieDefault(c, cookieName, clientUUID.String())
 		next(c)
 	} else {
 		c.String(http.StatusForbidden, fmt.Sprintf("Name or password is wrong"))
@@ -127,7 +127,7 @@ func handleVerifyAuth(c *gin.Context, name string, pwd string, next func(c *gin.
 	log.Println(username, password)
 }
 
-func handleFile(c *gin.Context) {
+func HandleFile(c *gin.Context) {
 
 	log.Println("recive request")
 	c.HTML(http.StatusOK, "upload.html", gin.H{
@@ -135,7 +135,7 @@ func handleFile(c *gin.Context) {
 	})
 }
 
-func handleUpload(c *gin.Context) {
+func HandleUpload(c *gin.Context) {
 
 	// Multipart form
 	form, _ := c.MultipartForm()
@@ -151,7 +151,7 @@ func handleUpload(c *gin.Context) {
 		totalUploadSize += file.Size
 	}
 
-	curDirSize, _ := getDirSize("./file_storage/")
+	curDirSize, _ := GetDirSize("./file_storage/")
 	restDirSize := MAX_DIR_SIZE - curDirSize
 	log.Println("current dir size ", curDirSize, "B")
 	log.Println("rest dir size ", restDirSize/1024/1024, "MB")
@@ -162,7 +162,7 @@ func handleUpload(c *gin.Context) {
 
 	for _, file := range files {
 		log.Println(file.Filename)
-		if flg, _ := fileExistInDir("./file_storage/", file.Filename); flg {
+		if flg, _ := FileExistInDir("./file_storage/", file.Filename); flg {
 			c.String(http.StatusForbidden, fmt.Sprintf("Filename already exist, change the filename or delete exist file."))
 		}
 
@@ -172,7 +172,7 @@ func handleUpload(c *gin.Context) {
 	c.String(http.StatusOK, fmt.Sprintf("%d files uploaded!", len(files)))
 }
 
-func handleDownload(c *gin.Context) {
+func HandleDownload(c *gin.Context) {
 	log.Println("recive request")
 	var files = []string{}
 	err := filepath.Walk("./file_storage/", func(_ string, info os.FileInfo, err error) error {
@@ -190,9 +190,9 @@ func handleDownload(c *gin.Context) {
 
 }
 
-func handleDelete(c *gin.Context) {
+func HandleDelete(c *gin.Context) {
 	filename := c.Query("filename")
-	if flg, _ := fileExistInDir("./file_storage/", filename); !flg {
+	if flg, _ := FileExistInDir("./file_storage/", filename); !flg {
 		c.String(http.StatusForbidden, fmt.Sprintf("Filename not exist."))
 		c.Abort()
 		return

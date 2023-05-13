@@ -1,7 +1,9 @@
 package controller
 
 import (
+	"encoding/json"
 	"fmt"
+	"io/ioutil"
 	"log"
 	"net/http"
 	"os"
@@ -14,10 +16,34 @@ import (
 	. "github.com/kanosc/glassysky/common"
 )
 
+func init() {
+	luckContent = ReadLuckContent()
+}
+
 const (
 	MAX_DIR_SIZE = 500 * 1024 * 1024
 )
 
+type LuckContent struct {
+	Luck       []string
+	LuckInfo   []string
+	GoodThings []string
+	BadThings  []string
+}
+
+var luckContent *LuckContent
+
+func ReadLuckContent() *LuckContent {
+	luck := new(LuckContent)
+	b, err := ioutil.ReadFile("LuckContent.json")
+	err = json.Unmarshal(b, luck)
+	if err != nil {
+		fmt.Println(err.Error())
+	}
+	log.Println("unmarshall success")
+	return luck
+
+}
 func CookieChecker() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		cookie, err := c.Cookie("UserCookie")
@@ -74,10 +100,10 @@ func HandleToday(c *gin.Context) {
 	log.Println("recive request")
 	randNum := RollInt(int64(8))
 	c.HTML(http.StatusOK, "today.html", gin.H{
-		"title":     todayLuck[randNum],
-		"content":   todayContent[randNum],
-		"yiThing":   yiThing[randNum],
-		"buyiThing": buyiThing[randNum],
+		"title":     luckContent.Luck[randNum],
+		"content":   luckContent.LuckInfo[randNum],
+		"yiThing":   luckContent.GoodThings[randNum],
+		"buyiThing": luckContent.BadThings[randNum],
 		"date":      GetDateStr(),
 	})
 }

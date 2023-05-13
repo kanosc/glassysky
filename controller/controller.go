@@ -18,6 +18,8 @@ import (
 
 func init() {
 	luckContent = ReadLuckContent()
+	log.Println("Loading luck content from json file")
+	log.Println(*luckContent)
 }
 
 const (
@@ -35,7 +37,7 @@ var luckContent *LuckContent
 
 func ReadLuckContent() *LuckContent {
 	luck := new(LuckContent)
-	b, err := ioutil.ReadFile("LuckContent.json")
+	b, err := ioutil.ReadFile("./controller/LuckContent.json")
 	err = json.Unmarshal(b, luck)
 	if err != nil {
 		fmt.Println(err.Error())

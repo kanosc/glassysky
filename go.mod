@@ -42,4 +42,6 @@ require (
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
 
-//replace github.com/kanosc/glassysky/common v0.0.0-20230510164714-2384d5e0c270 => ./common
+replace github.com/kanosc/glassysky/controller v0.0.0-20230510200201-dff04fc4f3ff => ./controller
+
+replace github.com/kanosc/glassysky/common v0.0.0-20230510194551-8e63787338db => ./common

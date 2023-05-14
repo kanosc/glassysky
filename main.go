@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"log"
 	"net/http"
 
@@ -13,9 +14,31 @@ import (
 	"golang.org/x/crypto/acme/autocert"
 )
 
+var router = gin.Default()
+var portFlag = flag.String("port", "9090", "usage: -port 443|9090, 9090 as default")
+var modeFlag = flag.String("mode", "production", "usage: -mode debug|production, production as default")
+
+func startServerLocal(e *gin.Engine, port string) {
+	e.Run(":" + port)
+}
+
+func startServerRemoteTLS(e *gin.Engine) {
+	//router.RunTLS(":443", "./cert/cert.crt", "./cert/rsa_private.key")
+	m := autocert.Manager{
+		Prompt:     autocert.AcceptTOS,
+		HostPolicy: autocert.HostWhitelist("glassysky.cn"),
+		Cache:      autocert.DirCache("/var/www/.cache"),
+	}
+	//log.Fatal(autotls.Run(router, "example1.com"))
+	log.Fatal(autotls.RunWithManager(e, &m))
+
+}
+
 func main() {
 
-	router := gin.Default()
+	flag.Parse()
+	log.Println("run mode:", *modeFlag)
+	log.Println("port set:", *portFlag)
 	store := cookie.NewStore([]byte("secret"))
 	router.Use(sessions.Sessions("mysession", store))
 	router.StaticFS("/pages/", http.Dir("pages"))
@@ -33,14 +56,11 @@ func main() {
 	router.POST("/uploadVerify", MakeAuthVerifyHandler("test", "file123", HandleFile))
 	router.POST("/downloadVerify", MakeAuthVerifyHandler("test", "file123", HandleDownload))
 	router.GET("/delete", CookieChecker2(), HandleDelete)
-	//router.Run(":80")
-	//router.RunTLS(":443", "./cert/cert.crt", "./cert/rsa_private.key")
-	m := autocert.Manager{
-		Prompt:     autocert.AcceptTOS,
-		HostPolicy: autocert.HostWhitelist("glassysky.cn"),
-		Cache:      autocert.DirCache("/var/www/.cache"),
+
+	if *modeFlag == "debug" {
+		startServerLocal(router, *portFlag)
+	} else {
+		startServerRemoteTLS(router)
 	}
-	//log.Fatal(autotls.Run(router, "example1.com"))
-	log.Fatal(autotls.RunWithManager(router, &m))
 
 }

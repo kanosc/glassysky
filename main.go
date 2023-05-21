@@ -2,8 +2,10 @@ package main
 
 import (
 	"flag"
+	"html/template"
 	"log"
 	"net/http"
+	"strings"
 
 	. "github.com/kanosc/glassysky/controller"
 
@@ -34,6 +36,15 @@ func startServerRemoteTLS(e *gin.Engine) {
 
 }
 
+func DelPoint(s string) string {
+	sa := strings.Split(s, ".")
+	ret := ""
+	for _, a := range sa {
+		ret = ret + a
+	}
+	return ret
+}
+
 func main() {
 
 	flag.Parse()
@@ -43,6 +54,9 @@ func main() {
 	router.Use(sessions.Sessions("mysession", store))
 	router.StaticFS("/pages/", http.Dir("pages"))
 	router.StaticFS("/resource/", http.Dir("file_storage"))
+	router.SetFuncMap(template.FuncMap{
+		"DelPoint": DelPoint,
+	})
 	//router.LoadHTMLGlob("pages/*")
 	router.LoadHTMLFiles("pages/login.html", "pages/download.html", "pages/upload.html", "pages/start.html", "pages/index.html", "pages/today.html")
 	router.GET("/", HandleStart)

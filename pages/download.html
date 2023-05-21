@@ -14,7 +14,7 @@
 	    <h1 class="text-center">在线文件存储系统</h1>
     </div>
     {{ range .files }}
-	<div class="card w-auto m-3 float-start bg-info text-white">
+	<div class="card w-auto m-3 float-start bg-info text-white" id="{{ DelPoint . }}">
         <div class="card-body">
 			<h4 class="card-title">{{ . }}</h4>
             <p class="card-text">The description of file.</p>
@@ -22,7 +22,7 @@
                 <button type="button" class="btn btn-primary dropdown-toggle btn-sm" data-bs-toggle="dropdown">Action</button>
                 <ul class="dropdown-menu">
 					<li><a class="dropdown-item download-btn" href="#" name="{{ . }}">Download</a></li>
-                    <li><a class="dropdown-item delete-btn" href="#" name="{{ . }}">Delete</a></li>
+                    <li><a class="dropdown-item delete-btn" href="#" name="{{ . }}" uname="{{ DelPoint . }}">Delete</a></li>
                 </ul>
             </div>
         </div>
@@ -51,6 +51,8 @@
         });
 		$(".delete-btn").click(function(){
             var filename = $(this).attr("name");
+			var uname = $(this).attr("uname");
+			alert("uname:" + uname)
             var url = "https://glassysky.cn/delete?filename=" + filename;
             $.ajax({url:url,
                 error:function(xhr){
@@ -58,6 +60,7 @@
                 },
                 success:function(xhr){
                     alert("delete file success");
+					$("#"+uname).remove();
 				}
 			});
 		});

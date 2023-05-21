@@ -51,8 +51,10 @@
         });
 		$(".delete-btn").click(function(){
             var filename = $(this).attr("name");
+			if (confirm("是否确认删除文件 " + filename) == false) {
+                return;
+            }
 			var uname = $(this).attr("uname");
-			alert("uname:" + uname)
             var url = "https://glassysky.cn/delete?filename=" + filename;
             $.ajax({url:url,
                 error:function(xhr){

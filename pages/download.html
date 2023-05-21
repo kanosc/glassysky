@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="https://cdn.staticfile.org/twitter-bootstrap/5.1.1/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdn.staticfile.org/twitter-bootstrap/5.1.1/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.staticfile.org/jquery/1.10.2/jquery.min.js"></script>
 </head>
 <body>
 <div class="container mt-3">
@@ -13,21 +14,54 @@
 	    <h1 class="text-center">在线文件存储系统</h1>
     </div>
     {{ range .files }}
-    <div class="card w-auto m-3 float-start bg-info text-white">
+	<div class="card w-auto m-3 float-start bg-info text-white">
         <div class="card-body">
-            <h4 class="card-title">{{ . }}</h4>
+			<h4 class="card-title">{{ . }}</h4>
             <p class="card-text">The description of file.</p>
             <div class="btn-group">
                 <button type="button" class="btn btn-primary dropdown-toggle btn-sm" data-bs-toggle="dropdown">Action</button>
                 <ul class="dropdown-menu">
-                    <li><a class="dropdown-item" href="https://glassysky.cn/resource/{{ . }}">Download</a></li>
-                    <li><a class="dropdown-item" href="https://glassysky.cn/delete?filename={{ . }}">Delete</a></li>
+					<li><a class="dropdown-item download-btn" href="#" name="{{ . }}">Download</a></li>
+                    <li><a class="dropdown-item delete-btn" href="#" name="{{ . }}">Delete</a></li>
                 </ul>
             </div>
         </div>
     </div>
     {{ end }}
 </div>
-
+<script>
+    $(document).ready(function(){
+        $(".download-btn").click(function(){
+			var filename = $(this).attr("name");
+			var url = "https://glassysky.cn/resource/" + filename;
+			var xhr = new XMLHttpRequest();
+			xhr.open('GET', url, true);//get请求，请求地址，是否异步
+			xhr.responseType = "blob";    // 返回类型blob
+			xhr.onload = function () {// 请求完成处理函数
+				if (this.status === 200) {
+					var blob = this.response;// 获取返回值
+					var a = document.createElement('a');
+					a.download = filename;
+					a.href=window.URL.createObjectURL(blob);
+					a.click();
+				}
+			};
+			// 发送ajax请求
+			xhr.send();
+        });
+		$(".delete-btn").click(function(){
+            var filename = $(this).attr("name");
+            var url = "https://glassysky.cn/delete?filename=" + filename;
+            $.ajax({url:url,
+                error:function(xhr){
+                    alert("delete file failed");
+                },
+                success:function(xhr){
+                    alert("delete file success");
+				}
+			});
+		});
+    });
+</script>
 </body>
 </html>

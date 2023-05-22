@@ -177,8 +177,8 @@ func HandleUpload(c *gin.Context) {
 	var totalUploadSize int64
 
 	for _, file := range files {
-		if strings.Contains(file.Filename, "/") {
-			c.String(http.StatusForbidden, fmt.Sprintf("Invalid filename."))
+		if strings.Contains(file.Filename, "/") || len(file.Filename) > 30 {
+			c.String(http.StatusForbidden, fmt.Sprintf("Invalid filename, max length is 30."))
 			return
 		}
 		totalUploadSize += file.Size

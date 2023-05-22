@@ -14,15 +14,15 @@
 	    <h1 class="text-center">在线文件存储系统</h1>
     </div>
     {{ range .files }}
-	<div class="card w-auto m-3 float-start bg-info text-white" id="{{ DelPoint . }}">
+	<div class="card w-25 m-0 float-start bg-light text-white" id="{{ DelPoint . }}">
         <div class="card-body">
-			<h4 class="card-title">{{ . }}</h4>
-            <p class="card-text">The description of file.</p>
+			<h6 class="card-title text-black text-nowrap overflow-hidden">{{ . }}</h6>
+			<p class="card-text text-black"><hr></p>
             <div class="btn-group">
-                <button type="button" class="btn btn-primary dropdown-toggle btn-sm" data-bs-toggle="dropdown">Action</button>
+                <button type="button" class="btn btn-primary dropdown-toggle btn-sm" data-bs-toggle="dropdown">操作</button>
                 <ul class="dropdown-menu">
-					<li><a class="dropdown-item download-btn" href="#" name="{{ . }}">Download</a></li>
-                    <li><a class="dropdown-item delete-btn" href="#" name="{{ . }}" uname="{{ DelPoint . }}">Delete</a></li>
+					<li><a class="dropdown-item download-btn" href="#" name="{{ . }}">下载</a></li>
+                    <li><a class="dropdown-item delete-btn" href="#" name="{{ . }}" uname="{{ DelPoint . }}">删除</a></li>
                 </ul>
             </div>
         </div>
@@ -58,10 +58,10 @@
             var url = "https://glassysky.cn/delete?filename=" + filename;
             $.ajax({url:url,
                 error:function(xhr){
-                    alert("delete file failed");
+                    alert("删除文件失败");
                 },
                 success:function(xhr){
-                    alert("delete file success");
+                    alert("删除文件成功");
 					$("#"+uname).remove();
 				}
 			});

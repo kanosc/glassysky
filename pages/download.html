@@ -9,25 +9,72 @@
     <script src="https://cdn.staticfile.org/jquery/1.10.2/jquery.min.js"></script>
 </head>
 <body>
-<div class="container mt-3">
-    <div class="container mt-5 mb-3 pb-3 border-bottom">
-	    <h1 class="text-center">在线文件存储系统</h1>
+<nav class="navbar navbar-expand-lg bg-body-tertiary bg-primary">
+    <div class="container-fluid" style="height: 50px">
+        <a class="navbar-brand text-white" href="#">Navigate</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link active text-white" aria-current="page" href="/">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-white" href="#">Link</a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle text-white" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Dropdown
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="#">Action</a></li>
+                        <li><a class="dropdown-item" href="#">Another action</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" href="#">Something else here</a></li>
+                    </ul>
+                </li>
+            </ul>
+            <form class="d-flex" role="search">
+                <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                <button class="btn btn-warning" type="submit">Search</button>
+            </form>
+        </div>
     </div>
-    {{ range .files }}
-	<div class="card w-25 m-0 float-start bg-light text-white" id="{{ DelPoint . }}">
-        <div class="card-body">
-			<h6 class="card-title text-black text-nowrap overflow-hidden">{{ . }}</h6>
-			<p class="card-text text-black"><hr></p>
-            <div class="btn-group">
-                <button type="button" class="btn btn-primary dropdown-toggle btn-sm" data-bs-toggle="dropdown">操作</button>
-                <ul class="dropdown-menu">
-					<li><a class="dropdown-item download-btn" href="#" name="{{ . }}">下载</a></li>
-                    <li><a class="dropdown-item delete-btn" href="#" name="{{ . }}" uname="{{ DelPoint . }}">删除</a></li>
-                </ul>
+</nav>
+<div class="row">
+    <div class="col-sm-2">
+        <div class="container mt-3 border-end border-start">
+            <div class="list-group list-group-flush">
+                <a href="#" class="list-group-item list-group-item-action text-center border active">文件下载</a>
+                <a href="/loginUpload" class="list-group-item list-group-item-action text-center">文件上传</a>
+                <a href="#" class="list-group-item list-group-item-action text-center">视图</a>
+                <a href="#" class="list-group-item list-group-item-action text-center">登出</a>
             </div>
         </div>
     </div>
-    {{ end }}
+    <div class="col-sm-10 mt-3">
+        <div class="container mt-3">
+            <div class="container mb-3 pb-3 border-bottom">
+                <h1 class="text-center">在线文件存储系统</h1>
+            </div>
+            {{ range .files }}
+            <div class="card w-25 m-0 float-start bg-light text-white" id="{{ DelPoint . }}">
+                <div class="card-body">
+                    <h6 class="card-title text-black text-nowrap overflow-hidden">{{ . }}</h6>
+                    <p class="card-text text-black"><hr></p>
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-primary dropdown-toggle btn-sm" data-bs-toggle="dropdown">操作</button>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item download-btn" href="#" name="{{ . }}">下载</a></li>
+                            <li><a class="dropdown-item delete-btn" href="#" name="{{ . }}" uname="{{ DelPoint . }}">删除</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            {{ end }}
+        </div>
+    </div>
 </div>
 <script>
     $(document).ready(function(){

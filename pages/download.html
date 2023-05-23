@@ -46,8 +46,12 @@
     <div class="col-sm-2">
         <div class="container mt-3 border-end border-start">
             <div class="list-group list-group-flush">
-                <a href="#" class="list-group-item list-group-item-action text-center border active">文件下载</a>
-                <a href="/loginUpload" class="list-group-item list-group-item-action text-center">文件上传</a>
+				<button type="button" class="list-group-item list-group-item-action btn text-center">
+                    文件下载
+                </button>
+				<button type="button" class="list-group-item list-group-item-action btn text-center" data-bs-toggle="modal" data-bs-target="#myModal">
+                    文件上传
+                </button>
                 <a href="#" class="list-group-item list-group-item-action text-center">视图</a>
                 <a href="#" class="list-group-item list-group-item-action text-center">登出</a>
             </div>
@@ -73,6 +77,36 @@
                 </div>
             </div>
             {{ end }}
+        </div>
+    </div>
+</div>
+<div class="modal" id="myModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <!-- 模态框头部 -->
+            <div class="modal-header">
+                <h4 class="modal-title">模态框标题</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <!-- 模态框内容 -->
+            <div class="modal-body">
+                模态框内容..
+                <form id="upload-form" action="/upload" method="post" enctype="multipart/form-data" >
+                    <input class="form-control" type="file" name="upload" id="upload" multiple />
+                    <!-- <input type="file" class="select-file" multiple="multiple" id="upload" name="upload"/> -->
+                    <hr>
+                    <button type="submit" class="btn btn-primary">上传</button>
+                    <!--                            <input type="submit" value="上传" />-->
+                </form>
+            </div>
+
+            <!-- 模态框底部 -->
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">关闭</button>
+            </div>
+
         </div>
     </div>
 </div>

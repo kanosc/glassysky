@@ -230,16 +230,19 @@ func HandleDownload(c *gin.Context) {
 func HandleDelete(c *gin.Context) {
 	filename := c.Query("filename")
 	if flg, _ := FileExistInDir("./file_storage/", filename); !flg {
-		c.String(http.StatusForbidden, fmt.Sprintf("Filename not exist."))
+		c.String(http.StatusNotFound, fmt.Sprintf("filename not exist."))
 		c.Abort()
 		return
 	}
 	err := os.Remove("./file_storage/" + filename)
 	if err != nil {
 		log.Println(err.Error())
-	} else {
-		log.Println("Delete file " + filename + " success")
+		c.String(http.StatusInternalServerError, fmt.Sprintf("filename exist, but remove failed."))
+		c.Abort()
+		return
 	}
+
+	log.Println("Delete file " + filename + " success")
 	//handleDownload(c)
 	c.String(http.StatusOK, fmt.Sprintf("%s has been deleted.", filename))
 

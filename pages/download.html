@@ -114,7 +114,7 @@
     $(document).ready(function(){
         $(".download-btn").click(function(){
 			var filename = $(this).attr("name");
-			var url = "https://glassysky.cn/resource/" + filename;
+			var url = "/resource/" + filename;
 			var xhr = new XMLHttpRequest();
 			xhr.open('GET', url, true);//get请求，请求地址，是否异步
 			xhr.responseType = "blob";    // 返回类型blob
@@ -136,13 +136,13 @@
                 return;
             }
 			var uname = $(this).attr("uname");
-            var url = "https://glassysky.cn/delete?filename=" + filename;
+            var url = "/delete?filename=" + filename;
             $.ajax({url:url,
                 error:function(xhr){
-                    alert("删除文件失败");
+					alert("Error: " + xhr.status + " " + xhr.statusText + ", " + xhr.responseText)
                 },
-                success:function(xhr){
-                    alert("删除文件成功");
+                success:function(res){
+                    alert(res);
 					$("#"+uname).remove();
 				}
 			});

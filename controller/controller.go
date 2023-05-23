@@ -190,6 +190,7 @@ func HandleUpload(c *gin.Context) {
 	log.Println("rest dir size ", restDirSize/1024/1024, "MB")
 	if totalUploadSize > restDirSize {
 		c.String(http.StatusForbidden, fmt.Sprintf("File size is too large"))
+		c.Abort()
 		return
 	}
 
@@ -197,12 +198,15 @@ func HandleUpload(c *gin.Context) {
 		log.Println(file.Filename)
 		if flg, _ := FileExistInDir("./file_storage/", file.Filename); flg {
 			c.String(http.StatusForbidden, fmt.Sprintf("Filename already exist, change the filename or delete exist file."))
+			c.Abort()
+			return
 		}
 
 		// 上传文件至指定目录
 		c.SaveUploadedFile(file, "./file_storage/"+file.Filename)
 	}
-	c.String(http.StatusOK, fmt.Sprintf("%d files uploaded!", len(files)))
+	HandleDownload(c)
+	//c.String(http.StatusOK, fmt.Sprintf("%d files uploaded!", len(files)))
 }
 
 func HandleDownload(c *gin.Context) {

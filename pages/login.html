@@ -60,7 +60,7 @@
             document.write(responseHTML);
           } else {
             // 请求失败，弹出对话框提示
-            alert("请求失败，请重试！");
+            alert(xhr.responseText);
           }
         }
       };

@@ -58,26 +58,6 @@ func CookieChecker() gin.HandlerFunc {
 		if err != nil || cookieExist != true {
 			c.HTML(http.StatusOK, "login.html", gin.H{
 				"title":  "Main website",
-				"action": "uploadVerify",
-			})
-			c.Abort()
-		}
-		c.Next()
-	}
-}
-
-func CookieChecker2() gin.HandlerFunc {
-	return func(c *gin.Context) {
-		cookie, err := c.Cookie("UserCookie")
-		log.Println("client cookie is", cookie)
-		session := sessions.Default(c)
-		cookieExist, _ := session.Get(cookie).(bool)
-		log.Println(cookieExist)
-		log.Println(session.Get(cookie))
-
-		if err != nil || cookieExist != true {
-			c.HTML(http.StatusOK, "login.html", gin.H{
-				"title":  "Main website",
 				"action": "downloadVerify",
 			})
 			c.Abort()
@@ -107,12 +87,6 @@ func HandleToday(c *gin.Context) {
 		"yiThing":   luckContent.GoodThings[randNum],
 		"buyiThing": luckContent.BadThings[randNum],
 		"date":      GetDateStr(),
-	})
-}
-
-func HandleLoginUpload(c *gin.Context) {
-	c.HTML(http.StatusOK, "upload.html", gin.H{
-		"title": "Main website",
 	})
 }
 
@@ -158,14 +132,6 @@ func HandleVerifyAuth(c *gin.Context, name string, pwd string, next func(c *gin.
 		c.String(http.StatusForbidden, fmt.Sprintf("Name or password is wrong"))
 	}
 	log.Println(username, password)
-}
-
-func HandleFile(c *gin.Context) {
-
-	log.Println("recive request")
-	c.HTML(http.StatusOK, "upload.html", gin.H{
-		"title": "Main website",
-	})
 }
 
 func HandleUpload(c *gin.Context) {

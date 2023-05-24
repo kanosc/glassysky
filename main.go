@@ -63,13 +63,12 @@ func main() {
 	router.GET("/index", HandleIndex)
 	router.GET("/today", HandleToday)
 
+	router.GET("/loginDownload", CookieChecker(), HandleLoginDownload)
+	router.POST("/downloadVerify", MakeAuthVerifyHandler("test", "file123", HandleDownload))
+
+	router.GET("/delete", CookieChecker(), HandleDelete)
 	router.GET("/download", HandleDownload)
 	router.POST("/upload", CookieChecker(), HandleUpload)
-	router.GET("/loginUpload", CookieChecker(), HandleLoginUpload)
-	router.GET("/loginDownload", CookieChecker2(), HandleLoginDownload)
-	router.POST("/uploadVerify", MakeAuthVerifyHandler("test", "file123", HandleFile))
-	router.POST("/downloadVerify", MakeAuthVerifyHandler("test", "file123", HandleDownload))
-	router.GET("/delete", CookieChecker2(), HandleDelete)
 
 	if *modeFlag == "debug" {
 		startServerLocal(router, *portFlag)

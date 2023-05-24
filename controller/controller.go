@@ -130,6 +130,7 @@ func HandleVerifyAuth(c *gin.Context, name string, pwd string, next func(c *gin.
 		next(c)
 	} else {
 		c.String(http.StatusForbidden, fmt.Sprintf("Name or password is wrong"))
+		c.Abort()
 	}
 	log.Println(username, password)
 }

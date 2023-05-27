@@ -65,6 +65,7 @@ func main() {
 
 	router.GET("/loginDownload", CookieChecker(), HandleLoginDownload)
 	router.POST("/downloadVerify", MakeAuthVerifyHandler("test", "file123", HandleDownload))
+	router.GET("/logout", HandleLogout)
 
 	router.GET("/delete", CookieChecker(), HandleDelete)
 	router.GET("/download", HandleDownload)

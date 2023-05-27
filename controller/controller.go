@@ -16,6 +16,10 @@ import (
 	. "github.com/kanosc/glassysky/common"
 )
 
+const (
+	clientCookieName = "UserCookie"
+)
+
 func init() {
 	luckContent = ReadLuckContent()
 	log.Println("Loading luck content from json file")
@@ -91,8 +95,14 @@ func HandleToday(c *gin.Context) {
 }
 
 func HandleLoginDownload(c *gin.Context) {
-	log.Println("recive request")
+	log.Println("recive login request")
 	HandleDownload(c)
+}
+
+func HandleLogout(c *gin.Context) {
+	log.Println("recive logout request")
+	c.SetCookie(clientCookieName, "", -1, "", "", false, true)
+	HandleIndex(c)
 }
 
 func SetCookieDefault(c *gin.Context, cookieName string, cookieValue string) {
@@ -123,7 +133,7 @@ func HandleVerifyAuth(c *gin.Context, name string, pwd string, next func(c *gin.
 	log.Println("recive request")
 	username := c.PostForm("username")
 	password := c.PostForm("password")
-	cookieName := "UserCookie"
+	cookieName := clientCookieName
 	if username == name && password == pwd {
 		clientUUID, _ := uuid.NewUUID()
 		SetCookieDefault(c, cookieName, clientUUID.String())

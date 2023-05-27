@@ -23,7 +23,7 @@ func init() {
 }
 
 const (
-	MAX_DIR_SIZE = 500 * 1024 * 1024
+	MAX_DIR_SIZE = 3 * 1024 * 1024 * 1024
 )
 
 type LuckContent struct {
@@ -140,11 +140,19 @@ func HandleUpload(c *gin.Context) {
 	// Multipart form
 	form, _ := c.MultipartForm()
 	files := form.File["upload"]
+	if len(files) == 0 {
+		c.String(http.StatusForbidden, fmt.Sprintf("No file recieved, please select files."))
+		c.Abort()
+		return
+		log.Println("number of file is 0")
+
+	}
+	log.Printf("%d files recieved", len(files))
 
 	var totalUploadSize int64
 
 	for _, file := range files {
-		if strings.Contains(file.Filename, "/") || len(file.Filename) > 30 {
+		if strings.Contains(file.Filename, "/") || len(file.Filename) > 50 {
 			c.String(http.StatusForbidden, fmt.Sprintf("Invalid filename, max length is 30."))
 			return
 		}

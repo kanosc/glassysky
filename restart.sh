@@ -17,6 +17,11 @@ done
 if [ -f homepage.exe ]; then
     rm homepage.exe
 fi
+
+if [ -f log.txt ]; then
+    rm log.txt
+fi
+
 echo 'server compiling...'
 go build -o homepage.exe
 

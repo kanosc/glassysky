@@ -73,7 +73,7 @@
                     <div class="btn-group">
                         <button type="button" class="btn btn-primary dropdown-toggle btn-sm" data-bs-toggle="dropdown">操作</button>
                         <ul class="dropdown-menu">
-                            <li><a class="dropdown-item download-btn" href="#" name="{{ . }}">下载</a></li>
+							<li><a class="dropdown-item download-btn" href="/resource/{{ . }}" download name="{{ . }}">下载</a></li>
                             <li><a class="dropdown-item delete-btn" href="#" name="{{ . }}" uname="{{ DelPoint . }}">删除</a></li>
                         </ul>
                     </div>
@@ -115,24 +115,6 @@
 </div>
 <script>
     $(document).ready(function(){
-        $(".download-btn").click(function(){
-			var filename = $(this).attr("name");
-			var url = "/resource/" + filename;
-			var xhr = new XMLHttpRequest();
-			xhr.open('GET', url, true);//get请求，请求地址，是否异步
-			xhr.responseType = "blob";    // 返回类型blob
-			xhr.onload = function () {// 请求完成处理函数
-				if (this.status === 200) {
-					var blob = this.response;// 获取返回值
-					var a = document.createElement('a');
-					a.download = filename;
-					a.href=window.URL.createObjectURL(blob);
-					a.click();
-				}
-			};
-			// 发送ajax请求
-			xhr.send();
-        });
 		$(".delete-btn").click(function(){
             var filename = $(this).attr("name");
 			if (confirm("是否确认删除文件 " + filename) == false) {

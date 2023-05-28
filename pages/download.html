@@ -66,7 +66,7 @@
                 <h1 class="text-center">在线文件存储系统</h1>
             </div>
             {{ range .files }}
-            <div class="card w-25 m-0 float-start bg-light text-white" id="{{ DelPoint . }}">
+            <div class="card w-25 m-0 float-start bg-light text-white" id="{{ DelPoint . }}" data-bs-toggle="tooltip" title="{{ . }}">
                 <div class="card-body">
                     <h6 class="card-title text-black text-nowrap overflow-hidden">{{ . }}</h6>
                     <p class="card-text text-black"><hr></p>
@@ -191,6 +191,11 @@
 			// 显示上传进度条
 			$('#progress-area').show();
 		});
+
+        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+        var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+            return new bootstrap.Tooltip(tooltipTriggerEl)
+        })
 
     });
 </script>

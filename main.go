@@ -65,12 +65,12 @@ func main() {
 
 	auth := router.Group("/auth")
 	{
+		auth.Use(CookieChecker())
 		auth.GET("/download", HandleDownload)
 		auth.StaticFS("/resource/", http.Dir("file_storage"))
 		auth.GET("/delete", HandleDelete)
 		auth.POST("/upload", HandleUpload)
 	}
-	auth.Use(CookieChecker())
 
 	//router.GET("/loginDownload", CookieChecker(), HandleDownload)
 	router.POST("/downloadVerify", MakeAuthVerifyHandler("test", "file123", HandleDownload))

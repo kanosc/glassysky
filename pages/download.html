@@ -163,10 +163,11 @@
 
 			// 监听上传完成事件
 			xhr.addEventListener('load', function() {
-				alert('上传成功！');
+				alert('上传成功，请刷新页面！');
 				$('#progress-area').hide();
-				var responseHTML = xhr.responseText;
-                document.write(responseHTML);
+				//var responseHTML = xhr.responseText;
+                //document.write(responseHTML);
+				window.location.href="/download"
 
 			});
 

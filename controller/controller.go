@@ -185,8 +185,8 @@ func HandleUpload(c *gin.Context) {
 		// 上传文件至指定目录
 		c.SaveUploadedFile(file, "./file_storage/"+file.Filename)
 	}
-	HandleDownload(c)
-	//c.String(http.StatusOK, fmt.Sprintf("%d files uploaded!", len(files)))
+	//HandleDownload(c)
+	c.String(http.StatusOK, fmt.Sprintf("%d files uploaded!", len(files)))
 }
 
 func HandleDownload(c *gin.Context) {

@@ -53,6 +53,7 @@ func main() {
 	store := cookie.NewStore([]byte("secret"))
 	router.Use(sessions.Sessions("mysession", store))
 	router.StaticFS("/pages/", http.Dir("pages"))
+	router.StaticFS("/resource/", http.Dir("file_storage"))
 	router.SetFuncMap(template.FuncMap{
 		"DelPoint": DelPoint,
 	})
@@ -63,14 +64,9 @@ func main() {
 	router.GET("/index", HandleIndex)
 	router.GET("/today", HandleToday)
 
-	auth := router.Group("/auth")
-	{
-		auth.Use(CookieChecker())
-		auth.GET("/download", HandleDownload)
-		auth.StaticFS("/resource/", http.Dir("file_storage"))
-		auth.GET("/delete", HandleDelete)
-		auth.POST("/upload", HandleUpload)
-	}
+	router.GET("/download", CookieChecker(), HandleDownload)
+	router.GET("/delete", CookieChecker(), HandleDelete)
+	router.POST("/upload", CookieChecker(), HandleUpload)
 
 	//router.GET("/loginDownload", CookieChecker(), HandleDownload)
 	router.POST("/downloadVerify", MakeAuthVerifyHandler("test", "file123", HandleDownload))

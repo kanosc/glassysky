@@ -73,7 +73,7 @@
                     <div class="btn-group">
                         <button type="button" class="btn btn-primary dropdown-toggle btn-sm" data-bs-toggle="dropdown">操作</button>
                         <ul class="dropdown-menu">
-							<li><a class="dropdown-item download-btn" href="/auth/resource/{{ . }}" download name="{{ . }}">下载</a></li>
+							<li><a class="dropdown-item download-btn" href="/resource/{{ . }}" download name="{{ . }}">下载</a></li>
                             <li><a class="dropdown-item delete-btn" href="#" name="{{ . }}" uname="{{ DelPoint . }}">删除</a></li>
                         </ul>
                     </div>
@@ -129,7 +129,7 @@
                 return;
             }
 			var uname = $(this).attr("uname");
-            var url = "/auth/delete?filename=" + filename;
+            var url = "/delete?filename=" + filename;
             $.ajax({url:url,
                 error:function(xhr){
 					alert("Error: " + xhr.status + " " + xhr.statusText + ", " + xhr.responseText)
@@ -180,7 +180,7 @@
 			});
 
 			// 开始上传
-			xhr.open('POST', '/auth/upload');
+			xhr.open('POST', '/upload');
 			var formData = new FormData();
 			for (var i = 0; i < files.length; i++) {
 				formData.append('upload', files[i]);

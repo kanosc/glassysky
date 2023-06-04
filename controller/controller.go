@@ -223,7 +223,7 @@ func HandleDelete(c *gin.Context) {
 	}
 
 	log.Println("Delete file " + filename + " success")
-	//handleDownload(c)
-	c.String(http.StatusOK, fmt.Sprintf("%s has been deleted.", filename))
+	HandleDownload(c)
+	//c.String(http.StatusOK, fmt.Sprintf("%s has been deleted.", filename))
 
 }

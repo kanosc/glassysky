@@ -74,7 +74,7 @@
                         <button type="button" class="btn btn-primary dropdown-toggle btn-sm" data-bs-toggle="dropdown">操作</button>
                         <ul class="dropdown-menu">
 							<li><a class="dropdown-item download-btn" href="/resource/{{ . }}" download name="{{ . }}">下载</a></li>
-							<li><a class="dropdown-item delete-btn" href="/delete?filename={{ . }}" name="{{ . }}" uname="{{ DelPoint . }}">删除</a></li>
+							<li><a class="dropdown-item delete-btn" href="#" name="{{ . }}" uname="{{ DelPoint . }}">删除</a></li>
                         </ul>
                     </div>
                 </div>
@@ -123,8 +123,7 @@
 </div>
 <script>
     $(document).ready(function(){
-		/*$(".delete-btn").click(function(){
-		    alert("clicked")
+		$(".delete-btn").click(function(){
             var filename = $(this).attr("name");
 			if (confirm("是否确认删除文件 " + filename) == false) {
                 return;
@@ -140,7 +139,7 @@
 					$("#"+uname).remove();
 				}
 			});
-		});*/
+		});
 		$('#upload-form').submit(function(event) {
 			event.preventDefault(); // 阻止表单默认提交行为
 
@@ -168,7 +167,7 @@
 				$('#progress-area').hide();
 				//var responseHTML = xhr.responseText;
                 //document.write(responseHTML);
-				window.location.href="/download"
+				window.location.href="/download";
 
 			});
 

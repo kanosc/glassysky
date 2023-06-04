@@ -65,6 +65,7 @@ func CookieChecker() gin.HandlerFunc {
 				"action": "downloadVerify",
 			})
 			c.Abort()
+			return
 		}
 		c.Next()
 	}

@@ -36,7 +36,6 @@
     <p class="mt-5 mb-3 text-muted">&copy; 2023–2028</p>
   </form>
 </main>
-
 <script>
   (function(){
     // 获取HTML中的表单元素和提交按钮元素
@@ -56,8 +55,9 @@
           if (xhr.status === 200) {
             // 成功接收到响应，打印出响应内容并将响应的 HTML 页面显示在页面上
             console.log(xhr.responseText);
-            var responseHTML = xhr.responseText;
-            document.write(responseHTML);
+			window.location.href="/download";
+            // var responseHTML = xhr.responseText;
+            // document.write(responseHTML);
           } else {
             // 请求失败，弹出对话框提示
             alert(xhr.responseText);

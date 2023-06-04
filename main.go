@@ -53,23 +53,28 @@ func main() {
 	store := cookie.NewStore([]byte("secret"))
 	router.Use(sessions.Sessions("mysession", store))
 	router.StaticFS("/pages/", http.Dir("pages"))
-	router.StaticFS("/resource/", http.Dir("file_storage"))
 	router.SetFuncMap(template.FuncMap{
 		"DelPoint": DelPoint,
 	})
 	//router.LoadHTMLGlob("pages/*")
-	router.LoadHTMLFiles("pages/login.html", "pages/download.html", "pages/upload.html", "pages/start.html", "pages/index.html", "pages/today.html")
+	router.LoadHTMLFiles("pages/login.html", "pages/download.html", "pages/start.html", "pages/index.html", "pages/today.html")
+
 	router.GET("/", HandleStart)
 	router.GET("/index", HandleIndex)
 	router.GET("/today", HandleToday)
 
-	router.GET("/loginDownload", CookieChecker(), HandleLoginDownload)
+	auth := router.Group("/auth")
+	{
+		auth.GET("/download", HandleDownload)
+		auth.StaticFS("/resource/", http.Dir("file_storage"))
+		auth.GET("/delete", HandleDelete)
+		auth.POST("/upload", HandleUpload)
+	}
+	auth.Use(CookieChecker())
+
+	//router.GET("/loginDownload", CookieChecker(), HandleDownload)
 	router.POST("/downloadVerify", MakeAuthVerifyHandler("test", "file123", HandleDownload))
 	router.GET("/logout", HandleLogout)
-
-	router.GET("/delete", CookieChecker(), HandleDelete)
-	router.GET("/download", HandleDownload)
-	router.POST("/upload", CookieChecker(), HandleUpload)
 
 	if *modeFlag == "debug" {
 		startServerLocal(router, *portFlag)

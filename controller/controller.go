@@ -94,11 +94,6 @@ func HandleToday(c *gin.Context) {
 	})
 }
 
-func HandleLoginDownload(c *gin.Context) {
-	log.Println("recive login request")
-	HandleDownload(c)
-}
-
 func HandleLogout(c *gin.Context) {
 	log.Println("recive logout request")
 	c.SetCookie(clientCookieName, "", -1, "", "", false, true)

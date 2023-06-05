@@ -186,11 +186,11 @@ func HandleUpload(c *gin.Context) {
 		// 上传文件至指定目录
 		c.SaveUploadedFile(file, "./file_storage/"+file.Filename)
 	}
-	//HandleDownload(c)
+	//HandleDownload_list(c)
 	c.String(http.StatusOK, fmt.Sprintf("%d files uploaded!", len(files)))
 }
 
-func HandleDownload(c *gin.Context) {
+func HandleDownload_card(c *gin.Context) {
 	log.Println("recive request")
 	var files = []string{}
 	err := filepath.Walk("./file_storage/", func(_ string, info os.FileInfo, err error) error {
@@ -202,7 +202,25 @@ func HandleDownload(c *gin.Context) {
 	if err != nil {
 		log.Println(err.Error())
 	}
-	c.HTML(http.StatusOK, "download.html", gin.H{
+	c.HTML(http.StatusOK, "download_card.html", gin.H{
+		"files": files,
+	})
+
+}
+
+func HandleDownload_list(c *gin.Context) {
+	log.Println("recive request")
+	var files = []string{}
+	err := filepath.Walk("./file_storage/", func(_ string, info os.FileInfo, err error) error {
+		if !info.IsDir() {
+			files = append(files, info.Name())
+		}
+		return err
+	})
+	if err != nil {
+		log.Println(err.Error())
+	}
+	c.HTML(http.StatusOK, "download_list.html", gin.H{
 		"files": files,
 	})
 
@@ -224,7 +242,7 @@ func HandleDelete(c *gin.Context) {
 	}
 
 	log.Println("Delete file " + filename + " success")
-	HandleDownload(c)
+	HandleDownload_list(c)
 	//c.String(http.StatusOK, fmt.Sprintf("%s has been deleted.", filename))
 
 }

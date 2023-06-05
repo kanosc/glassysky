@@ -58,18 +58,19 @@ func main() {
 		"DelPoint": DelPoint,
 	})
 	//router.LoadHTMLGlob("pages/*")
-	router.LoadHTMLFiles("pages/login.html", "pages/download.html", "pages/start.html", "pages/index.html", "pages/today.html")
+	router.LoadHTMLFiles("pages/login.html", "pages/download_card.html", "pages/download_list.html", "pages/start.html", "pages/index.html", "pages/today.html")
 
 	router.GET("/", HandleStart)
 	router.GET("/index", HandleIndex)
 	router.GET("/today", HandleToday)
 
-	router.GET("/download", CookieChecker(), HandleDownload)
+	router.GET("/download_card", CookieChecker(), HandleDownload_card)
+	router.GET("/download_list", CookieChecker(), HandleDownload_list)
 	router.GET("/delete", CookieChecker(), HandleDelete)
 	router.POST("/upload", CookieChecker(), HandleUpload)
 
 	//router.GET("/loginDownload", CookieChecker(), HandleDownload)
-	router.POST("/downloadVerify", MakeAuthVerifyHandler("test", "file123", HandleDownload))
+	router.POST("/downloadVerify", MakeAuthVerifyHandler("test", "file123", HandleDownload_list))
 	router.GET("/logout", HandleLogout)
 
 	if *modeFlag == "debug" {

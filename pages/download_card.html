@@ -9,7 +9,7 @@
     <script src="https://cdn.staticfile.org/jquery/1.10.2/jquery.min.js"></script>
 </head>
 <body>
-<nav class="navbar navbar-expand-lg bg-body-tertiary bg-primary">
+<nav class="navbar navbar-expand-lg bg-body-tertiary bg-primary fixed-top">
     <div class="container-fluid" style="height: 50px">
         <a class="navbar-brand text-white" href="#">Navigate</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -45,7 +45,8 @@
         </div>
     </div>
 </nav>
-<div class="row">
+<div style="height: 50px;"></div>
+<div class="row mt-2">
     <div class="col-sm-2">
         <div class="container mt-3 border-end border-start">
             <div class="list-group list-group-flush">
@@ -56,15 +57,17 @@
                     文件上传
                 </button>
                 <a href="/download_list" class="list-group-item list-group-item-action text-center">视图切换</a>
-                <a href="#" class="list-group-item list-group-item-action text-center">登出</a>
+                <a href="#" class="list-group-item list-group-item-action text-center">分类</a>
             </div>
         </div>
     </div>
     <div class="col-sm-8 mt-3">
         <div class="container mt-3">
+			<!--
             <div class="container mb-3 pb-3 border-bottom">
                 <h1 class="text-center">在线文件存储系统</h1>
             </div>
+			-->
             {{ range .files }}
             <div class="card w-25 m-0 float-start bg-light text-white" id="{{ DelPoint . }}" data-bs-toggle="tooltip" title="{{ . }}">
                 <div class="card-body">

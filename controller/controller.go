@@ -95,6 +95,10 @@ func HandleToday(c *gin.Context) {
 	})
 }
 
+func HandleSuccess(c *gin.Context) {
+	c.String(http.StatusOK, "success")
+}
+
 func HandleLogout(c *gin.Context) {
 	log.Println("recive logout request")
 	c.SetCookie(clientCookieName, "", -1, "", "", false, true)

@@ -70,7 +70,7 @@ func main() {
 	router.POST("/upload", CookieChecker(), HandleUpload)
 
 	//router.GET("/loginDownload", CookieChecker(), HandleDownload)
-	router.POST("/downloadVerify", MakeAuthVerifyHandler("test", "file123", HandleDownload_list))
+	router.POST("/downloadVerify", MakeAuthVerifyHandler("test", "file123", HandleSuccess))
 	router.GET("/logout", HandleLogout)
 
 	if *modeFlag == "debug" {

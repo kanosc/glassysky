@@ -78,7 +78,7 @@
 					</thead>
 					<tbody>
 					{{ range .files }}
-					<tr>
+					<tr id="{{ DelPoint . }}">
 						<td>
 							<span>{{ . }}</span>
 
@@ -109,7 +109,7 @@
                     文件上传
                 </button>
                 <a href="/download_card" class="list-group-item list-group-item-action text-center">视图切换</a>
-                <a href="#" class="list-group-item list-group-item-action text-center">登出</a>
+                <a href="#" class="list-group-item list-group-item-action text-center">分类</a>
             </div>
         </div>
     </div>
@@ -167,7 +167,6 @@
 					alert("Error: " + xhr.status + " " + xhr.statusText + ", " + xhr.responseText)
                 },
                 success:function(res){
-                    alert(res);
 					$("#"+uname).remove();
 				}
 			});
@@ -199,7 +198,7 @@
 				$('#progress-area').hide();
 				//var responseHTML = xhr.responseText;
                 //document.write(responseHTML);
-				window.location.href="/download";
+				window.location.href="/download_list";
 
 			});
 

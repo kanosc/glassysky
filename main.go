@@ -45,6 +45,12 @@ func DelPoint(s string) string {
 	return ret
 }
 
+func makePath(ps []string, d string) {
+	for i, p := range ps {
+		ps[i] = d + "/"  + p
+	}
+}
+
 func main() {
 
 	flag.Parse()
@@ -58,7 +64,10 @@ func main() {
 		"DelPoint": DelPoint,
 	})
 	//router.LoadHTMLGlob("pages/*")
-	router.LoadHTMLFiles("pages/login.html", "pages/download_card.html", "pages/download_list.html", "pages/start.html", "pages/index.html", "pages/today.html")
+	assetDir := "pages"
+	htmls := []string{"login.html", "download_card.html", "download_list.html", "start.html", "index.html", "today.html", "nav.html"}
+	makePath(htmls, assetDir)
+	router.LoadHTMLFiles(htmls...)
 
 	router.GET("/", HandleStart)
 	router.GET("/index", HandleIndex)

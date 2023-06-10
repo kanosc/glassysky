@@ -73,6 +73,7 @@ func main() {
 	router.GET("/", HandleStart)
 	router.GET("/index", HandleIndex)
 	router.GET("/today", HandleToday)
+	router.GET("/todayAgain", HandleTodayAgain)
 
 	router.GET("/download_card", CookieChecker(), HandleDownload_card)
 	router.GET("/download_list", CookieChecker(), HandleDownload_list)

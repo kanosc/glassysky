@@ -8,7 +8,9 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
+	"strconv"
 	"strings"
+	"time"
 
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
@@ -50,6 +52,7 @@ func ReadLuckContent() *LuckContent {
 	return luck
 
 }
+
 func CookieChecker() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		cookie, err := c.Cookie("UserCookie")
@@ -112,13 +115,60 @@ func GetRandomImage() (string, error) {
 }
 
 func HandleToday(c *gin.Context) {
-	log.Println("recive request")
+	crand, err1 := c.Cookie("luck")
+	cimg, err2 := c.Cookie("luckimg")
+	if err1 != nil || err2 != nil {
+		randNum := RollInt(int64(8))
+		randImg, err := GetRandomImage()
+		if err != nil {
+			log.Println(err.Error())
+			randImg = "#"
+		}
+		rns := strconv.Itoa(randNum)
+		log.Println("generate rand value:", randNum)
+		SetCookieToday(c, "luck", rns)
+		SetCookieToday(c, "luckimg", randImg)
+		c.HTML(http.StatusOK, "luck.html", gin.H{
+			"title":     luckContent.Luck[randNum],
+			"content":   luckContent.LuckInfo[randNum],
+			"yiThing":   luckContent.GoodThings[randNum],
+			"buyiThing": luckContent.BadThings[randNum],
+			"date":      GetDateStr(),
+			"imageURL":  randImg,
+		})
+	} else {
+		cnum, e := strconv.Atoi(crand)
+		if e != nil || cnum < 0 || cnum > 8 {
+			log.Println("cookie error, invalid rand, reset cookie")
+			c.Abort()
+		} else {
+			c.HTML(http.StatusOK, "luck.html", gin.H{
+				"title":     luckContent.Luck[cnum],
+				"content":   luckContent.LuckInfo[cnum],
+				"yiThing":   luckContent.GoodThings[cnum],
+				"buyiThing": luckContent.BadThings[cnum],
+				"date":      GetDateStr(),
+				"imageURL":  cimg,
+			})
+
+		}
+
+	}
+
+	log.Println("handle luck success")
+}
+
+func HandleTodayAgain(c *gin.Context) {
 	randNum := RollInt(int64(8))
 	randImg, err := GetRandomImage()
 	if err != nil {
 		log.Println(err.Error())
 		randImg = "#"
 	}
+	rns := strconv.Itoa(randNum)
+	log.Println("generate rand value:", randNum)
+	SetCookieToday(c, "luck", rns)
+	SetCookieToday(c, "luckimg", randImg)
 	c.HTML(http.StatusOK, "luck.html", gin.H{
 		"title":     luckContent.Luck[randNum],
 		"content":   luckContent.LuckInfo[randNum],
@@ -127,6 +177,8 @@ func HandleToday(c *gin.Context) {
 		"date":      GetDateStr(),
 		"imageURL":  randImg,
 	})
+
+	log.Println("handle luck again success")
 }
 
 func HandleSuccess(c *gin.Context) {
@@ -149,6 +201,30 @@ func SetCookieDefault(c *gin.Context, cookieName string, cookieValue string) {
 		session.Set(cookieValue, true)
 		session.Save()
 
+		log.Printf("Set new cookie value: %s \n", cookieValue)
+	} else {
+		log.Printf("Cookie value: %s \n", cookie)
+
+	}
+
+}
+
+func SetCookieToday(c *gin.Context, cookieName string, cookieValue string) {
+	cookie, err := c.Cookie(cookieName)
+	if err != nil {
+		// 计算当天的24点时间
+		now := time.Now()
+		t := time.Date(now.Year(), now.Month(), now.Day(), 23, 59, 59, 0, now.Location())
+
+		// 设置cookie
+		cookie := &http.Cookie{
+			Name:     cookieName,
+			Value:    cookieValue,
+			Path:     "/",
+			Expires:  t,
+			HttpOnly: true,
+		}
+		http.SetCookie(c.Writer, cookie)
 		log.Printf("Set new cookie value: %s \n", cookieValue)
 	} else {
 		log.Printf("Cookie value: %s \n", cookie)

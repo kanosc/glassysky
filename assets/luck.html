@@ -42,6 +42,7 @@
 								<p>忌：{{ .buyiThing }}</p>
 								<p class="text-end">{{ .date }}</p>
 							</div>
+							<button id="resetLuck" type="button" class="btn btn-primary">再抽一次</button>
 						</div>
 					</div>
 					<div class="col-sm-3">
@@ -61,7 +62,10 @@
 -->
 <script>
 $(document).ready(function(){
-	$("#home").addClass("active");
+	$("#luck").addClass("active");
+    $('#resetLuck').click(function() {
+		window.location.href="/todayAgain";
+  });
 });
 </script>
 </body>

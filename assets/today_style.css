@@ -1,0 +1,51 @@
+* {
+        margin: 0;
+        padding: 0;
+        font-family: 'montserrat', sans-serif;
+        box-sizing: border-box;
+}
+.services-section {
+        background:url(../assets/img/bg31.png);
+        /* background-color:#191970; */
+        /* background-color:#FFFAF0; */
+        background-size: cover;
+        background-repeat:no-repeat;
+        background-attachment:fixed;
+	background-position:0px -60px;
+        padding: 60px 0;
+}
+.main {
+        /*text-align: center; /*让div内部文字居中*/
+        padding: 8px;
+        border-style: groove;
+        border-radius: 20px;
+	border-color: gray;
+	border-width: 4px;
+        width: 300px;
+        height: 350px;
+        margin: auto;
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+}
+.main h2 {
+        text-align: center;
+	margin: 20px 0px 20px 0px;
+}
+.main p {
+	margin: 20px 0px 20px 0px;
+	font-size: 16px;
+	font-weight: 700;
+}
+.date {
+        margin-right: 20px;
+        margin-bottom: 0px;
+        position: absolute;
+        bottom: 0;
+        right: 0;
+	font-size: 16px;
+	font-weight: 700;
+}
+

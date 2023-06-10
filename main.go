@@ -47,7 +47,7 @@ func DelPoint(s string) string {
 
 func makePath(ps []string, d string) {
 	for i, p := range ps {
-		ps[i] = d + "/"  + p
+		ps[i] = d + "/" + p
 	}
 }
 
@@ -58,14 +58,15 @@ func main() {
 	log.Println("port set:", *portFlag)
 	store := cookie.NewStore([]byte("secret"))
 	router.Use(sessions.Sessions("mysession", store))
-	router.StaticFS("/pages/", http.Dir("pages"))
+	router.StaticFS("/assets/", http.Dir("assets"))
 	router.StaticFS("/resource/", http.Dir("file_storage"))
 	router.SetFuncMap(template.FuncMap{
 		"DelPoint": DelPoint,
 	})
 	//router.LoadHTMLGlob("pages/*")
-	assetDir := "pages"
-	htmls := []string{"login.html", "download_card.html", "download_list.html", "start.html", "index.html", "today.html", "nav.html"}
+	assetDir := "assets"
+	htmls := []string{"login.html", "download_card.html", "download_list.html", "index.html", "today.html", "nav.html", "footer.html",
+		"download_left.html", "download_right.html", "download_right2.html", "upload_frame.html"}
 	makePath(htmls, assetDir)
 	router.LoadHTMLFiles(htmls...)
 

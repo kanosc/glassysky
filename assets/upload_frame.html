@@ -1,0 +1,38 @@
+<div class="modal" id="myModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <!-- 模态框头部 -->
+            <div class="modal-header">
+                <h4 class="modal-title">上传文件</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <!-- 模态框内容 -->
+            <div class="modal-body">
+                请选择需要上传的文件（支持多选）
+                <form id="upload-form" enctype="multipart/form-data" >
+                    <input class="form-control" type="file" name="upload" id="file-input" multiple />
+                    <!-- <input type="file" class="select-file" multiple="multiple" id="upload" name="upload"/> -->
+                    <hr>
+                    <button type="submit" class="btn btn-primary">上传</button>
+                    <!--                            <input type="submit" value="上传" />-->
+                </form>
+                                <div id="progress-area" class="pt-3" style="display: none">
+                    <div class="progress">
+                        <div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                    </div>
+                    <div class="text-center pt-3">
+                        <span id="progress-text">0%</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 模态框底部 -->
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">关闭</button>
+            </div>
+
+        </div>
+    </div>
+</div>

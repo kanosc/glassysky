@@ -64,6 +64,9 @@
 $(document).ready(function(){
 	$("#luck").addClass("active");
     $('#resetLuck').click(function() {
+		if (confirm("确认后上次抽签结果将被覆盖，是否确认重置抽签结果？") == false) {
+            return;
+        }
 		window.location.href="/resetToday";
   });
 });

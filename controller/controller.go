@@ -83,15 +83,49 @@ func HandleStart(c *gin.Context) {
 	})
 }
 
+type RandomImage struct {
+	Error  int    `json:"error"`
+	Img    string `json:"img"`
+	Result int    `json:"result"`
+}
+
+func GetRandomImage() (string, error) {
+	// 发送 GET 请求获取 JSON 数据
+	resp, err := http.Get("https://img.xjh.me/random_img.php?return=json")
+	if err != nil {
+		return "", err
+	}
+	defer resp.Body.Close()
+
+	// 解析 JSON 数据
+	var randomImage RandomImage
+	decoder := json.NewDecoder(resp.Body)
+	err = decoder.Decode(&randomImage)
+	if err != nil {
+		return "", err
+	}
+
+	// 拼接图片 URL
+	imgUrl := "https:" + randomImage.Img
+
+	return imgUrl, nil
+}
+
 func HandleToday(c *gin.Context) {
 	log.Println("recive request")
 	randNum := RollInt(int64(8))
-	c.HTML(http.StatusOK, "today.html", gin.H{
+	randImg, err := GetRandomImage()
+	if err != nil {
+		log.Println(err.Error())
+		randImg = "#"
+	}
+	c.HTML(http.StatusOK, "luck.html", gin.H{
 		"title":     luckContent.Luck[randNum],
 		"content":   luckContent.LuckInfo[randNum],
 		"yiThing":   luckContent.GoodThings[randNum],
 		"buyiThing": luckContent.BadThings[randNum],
 		"date":      GetDateStr(),
+		"imageURL":  randImg,
 	})
 }
 

@@ -65,7 +65,7 @@ func main() {
 	})
 	//router.LoadHTMLGlob("pages/*")
 	assetDir := "assets"
-	htmls := []string{"login.html", "download_card.html", "download_list.html", "index.html", "today.html", "nav.html", "footer.html",
+	htmls := []string{"login.html", "download_card.html", "download_list.html", "index.html", "luck.html", "nav.html", "footer.html",
 		"download_left.html", "download_right.html", "download_right2.html", "upload_frame.html"}
 	makePath(htmls, assetDir)
 	router.LoadHTMLFiles(htmls...)

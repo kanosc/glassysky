@@ -158,27 +158,10 @@ func HandleToday(c *gin.Context) {
 	log.Println("handle luck success")
 }
 
-func HandleTodayAgain(c *gin.Context) {
-	randNum := RollInt(int64(8))
-	randImg, err := GetRandomImage()
-	if err != nil {
-		log.Println(err.Error())
-		randImg = "#"
-	}
-	rns := strconv.Itoa(randNum)
-	log.Println("generate rand value:", randNum)
-	SetCookieToday(c, "luck", rns)
-	SetCookieToday(c, "luckimg", randImg)
-	c.HTML(http.StatusOK, "luck.html", gin.H{
-		"title":     luckContent.Luck[randNum],
-		"content":   luckContent.LuckInfo[randNum],
-		"yiThing":   luckContent.GoodThings[randNum],
-		"buyiThing": luckContent.BadThings[randNum],
-		"date":      GetDateStr(),
-		"imageURL":  randImg,
-	})
-
-	log.Println("handle luck again success")
+func HandleResetToday(c *gin.Context) {
+	DeleteCookieToday(c, "luck")
+	DeleteCookieToday(c, "luckimg")
+	c.Redirect(http.StatusFound, "/today")
 }
 
 func HandleSuccess(c *gin.Context) {
@@ -233,6 +216,18 @@ func SetCookieToday(c *gin.Context, cookieName string, cookieValue string) {
 
 }
 
+func DeleteCookieToday(c *gin.Context, cookieName string) {
+	expiration := time.Now().AddDate(0, 0, -1) // 将过期时间设置为过去的时间，即立即失效
+
+	cookie := http.Cookie{
+		Name:    cookieName,
+		Value:   "",
+		Expires: expiration,
+		Path:    "/",
+	}
+	http.SetCookie(c.Writer, &cookie)
+
+}
 func MakeAuthVerifyHandler(name string, pwd string, handler func(c *gin.Context)) func(*gin.Context) {
 	return func(c *gin.Context) {
 		HandleVerifyAuth(c, name, pwd, handler)

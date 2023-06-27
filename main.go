@@ -14,6 +14,7 @@ import (
 	"github.com/gin-gonic/autotls"
 	"github.com/gin-gonic/gin"
 	"golang.org/x/crypto/acme/autocert"
+	"github.com/olahol/melody"
 )
 
 var router = gin.Default()
@@ -66,7 +67,7 @@ func main() {
 	//router.LoadHTMLGlob("pages/*")
 	assetDir := "assets"
 	htmls := []string{"login.html", "download_card.html", "download_list.html", "index.html", "luck.html", "nav.html", "footer.html",
-		"download_left.html", "download_right.html", "download_right2.html", "upload_frame.html"}
+		"download_left.html", "download_right.html", "download_right2.html", "upload_frame.html", "chat.html"}
 	makePath(htmls, assetDir)
 	router.LoadHTMLFiles(htmls...)
 
@@ -83,6 +84,20 @@ func main() {
 	//router.GET("/loginDownload", CookieChecker(), HandleDownload)
 	router.POST("/downloadVerify", MakeAuthVerifyHandler("test", "file123", HandleSuccess))
 	router.GET("/logout", HandleLogout)
+
+	m := melody.New()
+	router.GET("/chat", func(c *gin.Context) {
+		c.HTML(http.StatusOK, "chat.html", gin.H{
+        "title": "Chatroom v1.0",
+		})
+    })
+
+    router.GET("/wschat", func(c *gin.Context) {
+        m.HandleRequest(c.Writer, c.Request)
+    })
+    m.HandleMessage(func(s *melody.Session, msg []byte) {
+        m.Broadcast(msg)
+    })
 
 	if *modeFlag == "debug" {
 		startServerLocal(router, *portFlag)

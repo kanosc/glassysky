@@ -118,7 +118,7 @@ func HandleToday(c *gin.Context) {
 	crand, err1 := c.Cookie("luck")
 	cimg, err2 := c.Cookie("luckimg")
 	if err1 != nil || err2 != nil {
-		randNum := RollInt(int64(8))
+		randNum := RollInt(int64(len(luckContent.Luck) - 1))
 		randImg, err := GetRandomImage()
 		if err != nil {
 			log.Println(err.Error())
@@ -138,7 +138,7 @@ func HandleToday(c *gin.Context) {
 		})
 	} else {
 		cnum, e := strconv.Atoi(crand)
-		if e != nil || cnum < 0 || cnum > 8 {
+		if e != nil || cnum < 0 || cnum > len(luckContent.Luck) - 1 {
 			log.Println("cookie error, invalid rand, reset cookie")
 			c.Abort()
 		} else {

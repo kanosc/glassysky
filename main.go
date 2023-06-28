@@ -67,7 +67,7 @@ func main() {
 	//router.LoadHTMLGlob("pages/*")
 	assetDir := "assets"
 	htmls := []string{"login.html", "download_card.html", "download_list.html", "index.html", "luck.html", "nav.html", "footer.html",
-		"download_left.html", "download_right.html", "download_right2.html", "upload_frame.html", "chat.html"}
+		"download_left.html", "download_right.html", "download_right2.html", "upload_frame.html", "chat.html", "chat_login.html"}
 	makePath(htmls, assetDir)
 	router.LoadHTMLFiles(htmls...)
 
@@ -86,9 +86,14 @@ func main() {
 	router.GET("/logout", HandleLogout)
 
 	m := melody.New()
-	router.GET("/chat", func(c *gin.Context) {
+	router.GET("/chat_login", func(c *gin.Context) {
+		c.HTML(http.StatusOK, "chat_login.html", gin.H{
+		})
+    })
+	router.POST("/chat", func(c *gin.Context) {
+		username := c.PostForm("username")
 		c.HTML(http.StatusOK, "chat.html", gin.H{
-        "title": "Chatroom v1.0",
+        "username": username,
 		})
     })
 

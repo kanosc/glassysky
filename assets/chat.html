@@ -46,28 +46,47 @@
 </div>
 
 <script>
-	$(document).ready(function(){
+var flagE = false;
+$(document).ready(function(){
 
-		/*
-		var name = "";
-		var name = prompt("please input your name for chat");
-		if (name == "") {
-			name = "Guest" + Math.floor(Math.random() * 1000);
-		}*/
+	/*
+	var name = "";
+	var name = prompt("please input your name for chat");
+	if (name == "") {
+		name = "Guest" + Math.floor(Math.random() * 1000);
+	}*/
 
+	var lockReconnect = false;
+	var url = "wss://" + window.location.host + "/wschat";
+	var ws;
+	createWebSocket();
+	setInterval(createWebSocket, 30000);
+	//var name = "Guest" + Math.floor(Math.random() * 1000);
+
+
+
+	var now = function () {
+		var date = new Date(new Date().getTime()+(parseInt(new Date().getTimezoneOffset()/60) + 8)*3600*1000).toString();
+		var dateArr = date.split(" ");
+		return dateArr[1] + " " + dateArr[2] + " " + dateArr[3] + " " + dateArr[4];
+	};
+	
+	function init() {
+		console.log("init begin");
 		var name = $("#username").text();
-
-		var url = "wss://" + window.location.host + "/wschat";
-		var ws = new WebSocket(url);
-		//var name = "Guest" + Math.floor(Math.random() * 1000);
-
 		var chat = document.getElementById("chat");
 		var text = document.getElementById("text");
 
-		var now = function () {
-			var date = new Date(new Date().getTime()+(parseInt(new Date().getTimezoneOffset()/60) + 8)*3600*1000).toString();
-			var dateArr = date.split(" ");
-			return dateArr[1] + " " + dateArr[2] + " " + dateArr[3] + " " + dateArr[4];
+		//var ws = new WebSocket(url);
+
+		ws.onclose = function (e) {
+			flagE = false;
+			console.log('链接关闭' + e.code + new Date().getTime());
+			// 服务器关闭  不重连
+			if (e.code != 1006){
+			//	reconnect();
+				createWebSocket();
+			}
 		};
 
 		ws.onmessage = function (msg) {
@@ -82,13 +101,50 @@
 				text.value = "";
 			}
 		};
-
 		$("#send").click(function() {
-			ws.send("<" + name + "> " + text.value);
-			text.value = "";
+			if (text.value !== "") {
+				ws.send("<" + name + "> " + text.value);
+				text.value = "";
+			}
 		});
 
-	});
+		console.log("init finished");
+	}
+
+
+	function createWebSocket() {
+		try {
+			console.log("create socket begin");
+			if (!flagE){
+				ws = new WebSocket(url);
+				init();
+				flagE = true;
+			}
+			console.log("create socket end");
+		} catch(e) {
+			console.log('catch' + e);
+			createWebSocket();
+			//reconnect();
+		}
+	}
+/*
+	function reconnect() {
+		console.log("reconnect start");
+		var tt;
+		if(lockReconnect) {
+			return;
+		};
+		lockReconnect = true;
+		//没连接上会一直重连，设置延迟避免请求过多，  有定时任务 先取消再设置
+		tt && clearTimeout(tt);
+		tt = setTimeout(function () {
+			createWebSocket();
+			lockReconnect = false;
+		}, 3000);
+		console.log("reconnect finished");
+	}
+*/
+});
 
 </script>
 </body>

@@ -18,6 +18,9 @@
 		#send {
 			cursor: pointer;
 		}
+		#refresh {
+			cursor: pointer;
+		}
 	</style>
 </head>
 <body>
@@ -33,10 +36,12 @@
 			<div class="input-group mt-2">
 				<input placeholder="say something" id="text" type="text" class="form-control">
 				<span class="input-group-text bg-primary" id="send">发&nbsp;送</span>
+				<span class="input-group-text bg-danger" id="refresh">刷&nbsp;新</span>
 			</div>
         </div>
 		<div class="mt-3 ms-4 me-4 mb-5">
-			<pre id="chat"></pre>
+			<pre id="chat">{{ range .chatmsg }}{{ . }}{{ end }}
+			</pre>
 		</div>
     </div>
     <div class="col-sm-4">
@@ -90,23 +95,48 @@ $(document).ready(function(){
 		};
 
 		ws.onmessage = function (msg) {
-			var line =    now() + "\n" + msg.data + "\n";
+			var line =  msg.data;
 			chat.innerText = line + chat.innerText;
 		};
 
 		//text.onkeydown = sendMsg(e);
 		text.onkeydown = function(e) {
 			if (e.keyCode === 13 && text.value !== "") {
-				ws.send("<" + name + "> " + text.value);
+				ws.send(now() + "\n" + "<" + name + "> " + text.value + "\n");
 				text.value = "";
 			}
 		};
 		$("#send").click(function() {
 			if (text.value !== "") {
-				ws.send("<" + name + "> " + text.value);
+				ws.send(now() + "\n" + "<" + name + "> " + text.value + "\n");
 				text.value = "";
 			}
 		});
+
+		console.log("1");
+		$("#refresh").click(function() {
+			var name = $("#username").text();
+			const form = document.createElement('form');
+			form.setAttribute('action', '/chat'); // 设置表单的action属性
+			form.setAttribute('method', 'post'); // 设置表单的method属性
+			form.setAttribute('enctype', 'multipart/form-data'); // 设置为带有文件的表单类型
+
+			// 创建一个input元素来输入用户名
+			const usernameInput = document.createElement('input');
+			usernameInput.setAttribute('type', 'text');
+			usernameInput.setAttribute('name', 'username');
+			usernameInput.setAttribute('value', name); // 设置要提交的用户名
+			form.appendChild(usernameInput); // 添加到表单中
+
+			// 将表单添加到页面并提交
+			document.body.appendChild(form);
+			form.submit();
+
+			// 可选：提交后移除表单
+			document.body.removeChild(form);
+			//window.location.href = "/chat_login";
+		});
+		console.log("2");
 
 		console.log("init finished");
 	}

@@ -12,7 +12,7 @@
 		#chat {
 			text-align: left;
 			background: #f1f1f1;
-			min-height: 500px;
+			height: 600px;
 			padding: 20px;
 		}
 		#send {
@@ -21,27 +21,39 @@
 		#refresh {
 			cursor: pointer;
 		}
+		.scrollable {
+			overflow-y: scroll;
+		}
 	</style>
 </head>
-<body>
+<body class="bg-dark">
 <span id="username" hidden>{{ .username }}</span>
-{{ template "nav.html" . }}
 <div class="row mt-2">
     <div class="col-sm-4">
         <div class="container mt-3 border-end border-start">
         </div>
     </div>
-    <div class="col-sm-4 mt-3 mb-3 bg-secondary">
-        <div class="container mt-4 mb-3">
+    <div class="col-sm-4 mt-3 mb-3">
+        <div class="container mt-2 mb-3">
 			<div class="input-group mt-2">
 				<input placeholder="say something" id="text" type="text" class="form-control">
-				<span class="input-group-text bg-primary" id="send">发&nbsp;送</span>
-				<span class="input-group-text bg-danger" id="refresh">刷&nbsp;新</span>
+				<span class="input-group-text bg-primary text-white" id="send">发&nbsp;送</span>
+				<span class="input-group-text bg-danger text-white" id="refresh">刷&nbsp;新</span>
 			</div>
         </div>
 		<div class="mt-3 ms-4 me-4 mb-5">
-			<pre id="chat">{{ range .chatmsg }}{{ . }}{{ end }}
-			</pre>
+			<!--<pre id="chat" class="text-justify">{{ range .chatmsg }}{{ . }}{{ end }}
+			</pre>-->
+			<div id="chat" class="text-justify scrollable">
+			{{ range .chatmsg }}
+			<!--<p class="text-muted">
+			{{ . }}
+			</p>-->
+			<div class="alert alert-success" role="alert">
+			{{ . }}
+			</div>
+			{{ end }}
+			</div>
 		</div>
     </div>
     <div class="col-sm-4">
@@ -65,7 +77,7 @@ $(document).ready(function(){
 	var url = "wss://" + window.location.host + "/wschat";
 	var ws;
 	createWebSocket();
-	setInterval(createWebSocket, 30000);
+	setInterval(createWebSocket, 30000)
 	//var name = "Guest" + Math.floor(Math.random() * 1000);
 
 
@@ -96,24 +108,43 @@ $(document).ready(function(){
 
 		ws.onmessage = function (msg) {
 			var line =  msg.data;
-			chat.innerText = line + chat.innerText;
+			//chat.innerText = line + chat.innerText;
+			function insertParagraph() {
+				// 创建一个新的<p>元素
+				const paragraph = document.createElement('div');
+				paragraph.textContent = line; // 设置<p>标签的内容为'hello'
+				paragraph.classList.add('alert');
+				paragraph.classList.add('alert-success');
+				paragraph.setAttribute("role", "alert");
+
+				// 在id为'chat'的元素中最前面插入<p>标签
+				const chatElement = document.getElementById('chat');
+				if (chatElement.firstChild) {
+					chatElement.insertBefore(paragraph, chatElement.firstChild);
+				} else {
+					chatElement.appendChild(paragraph);
+				}
+			}
+
+			// 调用函数来执行插入<p>标签的操作
+			insertParagraph();
 		};
 
 		//text.onkeydown = sendMsg(e);
 		text.onkeydown = function(e) {
 			if (e.keyCode === 13 && text.value !== "") {
-				ws.send(now() + "\n" + "<" + name + "> " + text.value + "\n");
+				//ws.send(now() + "\n" + "<" + name + "> " + text.value + "\n");
+				ws.send("<" + name + "> " + text.value + "\n");
 				text.value = "";
 			}
 		};
 		$("#send").click(function() {
 			if (text.value !== "") {
-				ws.send(now() + "\n" + "<" + name + "> " + text.value + "\n");
+				ws.send("<" + name + "> " + text.value + "\n");
 				text.value = "";
 			}
 		});
 
-		console.log("1");
 		$("#refresh").click(function() {
 			var name = $("#username").text();
 			const form = document.createElement('form');
@@ -136,7 +167,6 @@ $(document).ready(function(){
 			document.body.removeChild(form);
 			//window.location.href = "/chat_login";
 		});
-		console.log("2");
 
 		console.log("init finished");
 	}
@@ -157,6 +187,14 @@ $(document).ready(function(){
 			//reconnect();
 		}
 	}
+/*
+	document.addEventListener('touchmove', function (e) {
+		if (e.touches.length > 1) {
+			return;
+		}
+		//e.preventDefault();
+	}, {passive: false})
+	*/
 /*
 	function reconnect() {
 		console.log("reconnect start");

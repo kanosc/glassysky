@@ -74,6 +74,23 @@ func CookieChecker() gin.HandlerFunc {
 	}
 }
 
+func ChatCookieChecker() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		cookie, err := c.Cookie("chatname")
+		log.Println("client cookie is", cookie)
+
+		if err != nil {
+			c.HTML(http.StatusOK, "chat_login.html", gin.H{
+				"title": "Main website",
+			})
+			c.Abort()
+			return
+		}
+		c.Set("chatname", cookie)
+		c.Next()
+	}
+}
+
 func HandleIndex(c *gin.Context) {
 	c.HTML(http.StatusOK, "index.html", gin.H{
 		"title": "Main website",
@@ -138,7 +155,7 @@ func HandleToday(c *gin.Context) {
 		})
 	} else {
 		cnum, e := strconv.Atoi(crand)
-		if e != nil || cnum < 0 || cnum > len(luckContent.Luck) - 1 {
+		if e != nil || cnum < 0 || cnum > len(luckContent.Luck)-1 {
 			log.Println("cookie error, invalid rand, reset cookie")
 			c.Abort()
 		} else {

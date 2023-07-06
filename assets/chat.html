@@ -74,7 +74,8 @@ $(document).ready(function(){
 	}*/
 
 	var lockReconnect = false;
-	var url = "ws://" + window.location.host + "/wschat";
+	//var url = "ws://" + window.location.host + "/wschat";
+	var url = "wss://" + window.location.host + "/wschat";
 	var ws;
 	createWebSocket();
 	setInterval(createWebSocket, 30000)

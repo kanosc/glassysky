@@ -28,8 +28,8 @@ var ctx = context.Background()
 func init() {
 	redisClient = redis.NewClient(&redis.Options{
 		Addr: "localhost:6379",
-		//Password: "929319", // no password set
-		Password: "myredis6379", // no password set
+		Password: "929319", // no password set
+		//Password: "myredis6379", // no password set
 		DB:       0,
 	})
 

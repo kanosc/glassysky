@@ -134,7 +134,7 @@ func main() {
 
 	router.POST("/chat", func(c *gin.Context) {
 		username := c.PostForm("username")
-		SetCookieDefault(c, "chatname", username)
+		SetCookieDefault(c, "chatname", username, 7200)
 		historyMsg, err := redisClient.LRange(ctx, "chatmsg", 0, -1).Result()
 		if err != nil {
 			log.Println(err.Error())

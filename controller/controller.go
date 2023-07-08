@@ -191,13 +191,13 @@ func HandleLogout(c *gin.Context) {
 	HandleIndex(c)
 }
 
-func SetCookieDefault(c *gin.Context, cookieName string, cookieValue string) {
+func SetCookieDefault(c *gin.Context, cookieName string, cookieValue string, expireTime int) {
 	cookie, err := c.Cookie(cookieName)
 	if err != nil {
 		c.SetCookie(cookieName, cookieValue, 1800, "", "", false, true)
 
 		session := sessions.Default(c)
-		session.Options(sessions.Options{MaxAge: 1800})
+		session.Options(sessions.Options{MaxAge: expireTime})
 		session.Set(cookieValue, true)
 		session.Save()
 
@@ -258,7 +258,7 @@ func HandleVerifyAuth(c *gin.Context, name string, pwd string, next func(c *gin.
 	cookieName := clientCookieName
 	if username == name && password == pwd {
 		clientUUID, _ := uuid.NewUUID()
-		SetCookieDefault(c, cookieName, clientUUID.String())
+		SetCookieDefault(c, cookieName, clientUUID.String(), 1800)
 		next(c)
 	} else {
 		c.String(http.StatusForbidden, fmt.Sprintf("Name or password is wrong"))

@@ -150,7 +150,7 @@ $(document).ready(function(){
 			}
 		});
 
-		$("#refresh").click(function() {
+/*		$("#refresh").click(function() {
 			var name = $("#username").text();
 			const form = document.createElement('form');
 			form.setAttribute('action', '/chat'); // 设置表单的action属性
@@ -171,6 +171,11 @@ $(document).ready(function(){
 			// 可选：提交后移除表单
 			document.body.removeChild(form);
 			//window.location.href = "/chat_login";
+		}); */
+		$("#refresh").click(function() {
+			var uname = $("#username").text();
+			var rname = $("#roomname").text();
+			window.location.href = "/chat/"+rname+"?username="+uname;
 		});
 
 		console.log("init finished");

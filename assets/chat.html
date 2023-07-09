@@ -28,6 +28,7 @@
 </head>
 <body class="bg-dark">
 <span id="username" hidden>{{ .username }}</span>
+<span id="roomname" hidden>{{ .roomname }}</span>
 <div class="row mt-2">
     <div class="col-sm-4">
         <div class="container border-end border-start">
@@ -35,6 +36,7 @@
     </div>
     <div class="col-sm-4 mb-3">
         <div class="container mt-2 mb-3">
+			<h3 class="text-white">{{ .roomname }}</h3>
 			<div class="input-group mt-2">
 				<input placeholder="say something" id="text" type="text" class="form-control">
 				<span class="input-group-text bg-primary text-white" id="send">发&nbsp;送</span>
@@ -75,7 +77,8 @@ $(document).ready(function(){
 
 	var lockReconnect = false;
 	//var url = "ws://" + window.location.host + "/wschat";
-	var url = "wss://" + window.location.host + "/wschat";
+	var roomname = $("#roomname").text();
+	var url = "ws://" + window.location.host + "/wschat/" + roomname;
 	var ws;
 	createWebSocket();
 	setInterval(createWebSocket, 30000)
@@ -92,6 +95,7 @@ $(document).ready(function(){
 	function init() {
 		console.log("init begin");
 		var name = $("#username").text();
+		var roomname = $("#roomname").text();
 		var chat = document.getElementById("chat");
 		var text = document.getElementById("text");
 
@@ -176,6 +180,8 @@ $(document).ready(function(){
 	function createWebSocket() {
 		try {
 			console.log("create socket begin");
+		var roomname = $("#roomname").text();
+		var url = "ws://" + window.location.host + "/wschat/" + roomname;
 			if (!flagE){
 				ws = new WebSocket(url);
 				init();

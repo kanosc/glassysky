@@ -10,7 +10,6 @@ import (
 	"path/filepath"
 	"strconv"
 	"strings"
-	"time"
 
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
@@ -51,44 +50,6 @@ func ReadLuckContent() *LuckContent {
 	log.Println("unmarshall success")
 	return luck
 
-}
-
-func CookieChecker() gin.HandlerFunc {
-	return func(c *gin.Context) {
-		cookie, err := c.Cookie("UserCookie")
-		log.Println("client cookie is", cookie)
-		session := sessions.Default(c)
-		cookieExist, _ := session.Get(cookie).(bool)
-		log.Println(cookieExist)
-		log.Println(session.Get(cookie))
-
-		if err != nil || cookieExist != true {
-			c.HTML(http.StatusOK, "login.html", gin.H{
-				"title":  "Main website",
-				"action": "downloadVerify",
-			})
-			c.Abort()
-			return
-		}
-		c.Next()
-	}
-}
-
-func ChatCookieChecker() gin.HandlerFunc {
-	return func(c *gin.Context) {
-		cookie, err := c.Cookie("chatname")
-		log.Println("client cookie is", cookie)
-
-		if err != nil {
-			c.HTML(http.StatusOK, "chat_login.html", gin.H{
-				"title": "Main website",
-			})
-			c.Abort()
-			return
-		}
-		c.Set("chatname", cookie)
-		c.Next()
-	}
 }
 
 func HandleIndex(c *gin.Context) {
@@ -135,7 +96,7 @@ func HandleToday(c *gin.Context) {
 	crand, err1 := c.Cookie("luck")
 	cimg, err2 := c.Cookie("luckimg")
 	if err1 != nil || err2 != nil {
-		randNum := RollInt(int64(len(luckContent.Luck) - 1))
+		randNum := RollInt(int64(len(luckContent.Luck)))
 		randImg, err := GetRandomImage()
 		if err != nil {
 			log.Println(err.Error())
@@ -176,8 +137,8 @@ func HandleToday(c *gin.Context) {
 }
 
 func HandleResetToday(c *gin.Context) {
-	DeleteCookieToday(c, "luck")
-	DeleteCookieToday(c, "luckimg")
+	DeleteCookieClient(c, "luck")
+	DeleteCookieClient(c, "luckimg")
 	c.Redirect(http.StatusFound, "/today")
 }
 
@@ -191,60 +152,44 @@ func HandleLogout(c *gin.Context) {
 	HandleIndex(c)
 }
 
-func SetCookieDefault(c *gin.Context, cookieName string, cookieValue string, expireTime int) {
-	cookie, err := c.Cookie(cookieName)
-	if err != nil {
-		c.SetCookie(cookieName, cookieValue, 1800, "", "", false, true)
-
+func CookieChecker() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		cookie, err := c.Cookie("UserCookie")
+		log.Println("client cookie is", cookie)
 		session := sessions.Default(c)
-		session.Options(sessions.Options{MaxAge: expireTime})
-		session.Set(cookieValue, true)
-		session.Save()
+		cookieExist, _ := session.Get(cookie).(bool)
+		log.Println(cookieExist)
+		log.Println(session.Get(cookie))
 
-		log.Printf("Set new cookie value: %s \n", cookieValue)
-	} else {
-		log.Printf("Cookie value: %s \n", cookie)
-
-	}
-
-}
-
-func SetCookieToday(c *gin.Context, cookieName string, cookieValue string) {
-	cookie, err := c.Cookie(cookieName)
-	if err != nil {
-		// 计算当天的24点时间
-		now := time.Now()
-		t := time.Date(now.Year(), now.Month(), now.Day(), 23, 59, 59, 0, now.Location())
-
-		// 设置cookie
-		cookie := &http.Cookie{
-			Name:     cookieName,
-			Value:    cookieValue,
-			Path:     "/",
-			Expires:  t,
-			HttpOnly: true,
+		if err != nil || cookieExist != true {
+			c.HTML(http.StatusOK, "login.html", gin.H{
+				"title":  "Main website",
+				"action": "downloadVerify",
+			})
+			c.Abort()
+			return
 		}
-		http.SetCookie(c.Writer, cookie)
-		log.Printf("Set new cookie value: %s \n", cookieValue)
-	} else {
-		log.Printf("Cookie value: %s \n", cookie)
-
+		c.Next()
 	}
-
 }
 
-func DeleteCookieToday(c *gin.Context, cookieName string) {
-	expiration := time.Now().AddDate(0, 0, -1) // 将过期时间设置为过去的时间，即立即失效
+func ChatCookieChecker() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		cookie, err := c.Cookie("chatname")
+		log.Println("client cookie is", cookie)
 
-	cookie := http.Cookie{
-		Name:    cookieName,
-		Value:   "",
-		Expires: expiration,
-		Path:    "/",
+		if err != nil {
+			c.HTML(http.StatusOK, "chat_login.html", gin.H{
+				"title": "Main website",
+			})
+			c.Abort()
+			return
+		}
+		c.Set("chatname", cookie)
+		c.Next()
 	}
-	http.SetCookie(c.Writer, &cookie)
-
 }
+
 func MakeAuthVerifyHandler(name string, pwd string, handler func(c *gin.Context)) func(*gin.Context) {
 	return func(c *gin.Context) {
 		HandleVerifyAuth(c, name, pwd, handler)

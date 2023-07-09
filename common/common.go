@@ -10,6 +10,7 @@ import (
 	"time"
 )
 
+//get a time string in chinese
 func GetDateStr() string {
 	t := time.Now()
 	weekday := []string{"日", "一", "二", "三", "四", "五", "六"}
@@ -17,11 +18,13 @@ func GetDateStr() string {
 	return date
 }
 
+//generate a number in int64, the range will be [0, 5) if let end be 5
 func RollInt(end int64) int {
-	ret, _ := rand.Int(rand.Reader, big.NewInt(end+1))
+	ret, _ := rand.Int(rand.Reader, big.NewInt(end))
 	return int(ret.Int64())
 }
 
+//get total size of all files in a path, exluding directories
 func GetDirSize(path string) (int64, error) {
 	var size int64
 	err := filepath.Walk(path, func(_ string, info os.FileInfo, err error) error {
@@ -33,6 +36,7 @@ func GetDirSize(path string) (int64, error) {
 	return size, err
 }
 
+//get all filenames in a path, returns a list
 func GetFileNameList(path string) []string {
 	filenames := make([]string, 0)
 	filepath.Walk(path, func(_ string, info os.FileInfo, err error) error {
@@ -49,6 +53,7 @@ func GetFileNameList(path string) []string {
 	return filenames
 }
 
+//check whether a file exists in a path
 func FileExistInDir(path, filename string) (bool, error) {
 	//	var fileExistFlag = false
 	/* err := filepath.Walk(path, func(_ string, info os.FileInfo, err error) error {

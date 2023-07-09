@@ -1,0 +1,40 @@
+<div class="col-sm-2">
+	<div class="container mt-3 border-end border-start">
+		<div class="list-group list-group-flush">
+			<a href="#" class="list-group-item list-group-item-action text-center" data-bs-toggle="modal" data-bs-target="#myModal">
+				create room
+			</a>
+			<a href="#" class="list-group-item list-group-item-action text-center">log out</a>
+		</div>
+	</div>
+</div>
+<div class="modal" id="myModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <!-- 模态框头部 -->
+            <div class="modal-header">
+                <h4 class="modal-title">create new room</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <!-- 模态框内容 -->
+            <div class="modal-body">
+                <form action="/create_room" method="POST" enctype="multipart/form-data">
+                    <input class="form-control" type="text" name="roomname" placeholder="input room name"/>
+					<hr>
+                    <input class="form-control" type="text" name="maxuser" placeholder="input max users"/>
+                    <!-- <input type="file" class="select-file" multiple="multiple" id="upload" name="upload"/> -->
+					<hr>
+					<button type="submit" class="btn btn-primary">Submit</button>
+                </form>
+            </div>
+
+            <!-- 模态框底部 -->
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">关闭</button>
+            </div>
+
+        </div>
+    </div>
+</div>

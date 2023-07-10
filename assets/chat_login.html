@@ -14,13 +14,14 @@
   <body class="text-center">
     
 <main class="form-signin w-100 m-auto">
-  <form action="/chat_room" method="post" enctype="multipart/form-data">
-    <img class="mb-4" src="../assets/logo.svg" alt="" width="72" height="57">
-    <h1 class="h3 mb-3 fw-normal">欢迎来到moon聊天室，请输入您的id</h1>
+  <form action="/chat_room" method="post" enctype="multipart/form-data" class="was-validated">
+    <img decoding="async" class="mb-4" src="../assets/logo.svg" alt="" width="72" height="57">
+    <h1 class="h3 mb-3 fw-normal">moon聊天室</h1>
 
     <div class="form-floating mb-3">
-      <input type="text" name="username" class="form-control" id="floatingInput" placeholder="Username">
-      <label for="floatingInput">Username</label>
+      <input type="text" name="username" class="form-control" id="floatingInput" required>
+	  <div class="valid-feedback">验证成功！</div>
+      <div class="invalid-feedback">请输入昵称</div>
     </div>
 
     <button class="w-100 btn btn-lg btn-dark" type="submit">登录</button>

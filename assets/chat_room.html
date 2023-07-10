@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>online storage</title>
+    <title>chat rooms</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="https://cdn.staticfile.org/twitter-bootstrap/5.1.1/css/bootstrap.min.css" rel="stylesheet">
@@ -21,41 +21,14 @@
 			-->
 			<div class="table-responsive">
 				<table class="table table-hover">
-					<!--
-					<thead>
-					<tr>
-						<th>file name</th>
-						<th><span>file action</span></th>
-					</tr>
-					</thead>
-					-->
-					<tbody>
-<!--					{{ range .files }}
-					<tr id="{{ DelPoint . }}">
-						<td>
-							<span>{{ . }}</span>
-
-						</td>
-						<td>
-							<div class="btn-group">
-								<button type="button" class="btn btn-primary dropdown-toggle btn-sm" data-bs-toggle="dropdown">操作</button>
-								<ul class="dropdown-menu">
-									<li><a class="dropdown-item download-btn" href="/resource/{{ . }}" download name="{{ . }}">下载</a></li>
-									<li><a class="dropdown-item delete-btn" href="#" name="{{ . }}" uname="{{ DelPoint . }}">删除</a></li>
-								</ul>
-							</div>
-						</td>
-					</tr>
-					{{ end }} -->
 
 					{{ range .rooms }}
 					<tr>
 						<td>
-							<span><a href="/chat/{{ . }}?username={{ $.username }}">{{ . }}</a></span>
-
+							<span>{{ . }}</span>
 						</td>
 						<td>
-							<span>Description</span>
+							<span><a href="/chat/{{ . }}?username={{ $.username }}"><button class="btn btn-warning">进入房间</button></a></span>
 						</td>
 					</tr>
 					{{ end }}

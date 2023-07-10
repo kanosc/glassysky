@@ -28,8 +28,8 @@ var ctx = context.Background()
 func init() {
 	redisClient = redis.NewClient(&redis.Options{
 		Addr: "localhost:6379",
-		//Password: "929319", // no password set
-		Password: "myredis6379", // no password set
+		Password: "929319", // no password set
+		//Password: "myredis6379", // no password set
 		DB:       0,
 	})
 
@@ -88,7 +88,7 @@ func main() {
 	//router.LoadHTMLGlob("pages/*")
 	assetDir := "assets"
 	htmls := []string{"login.html", "download_card.html", "download_list.html", "index.html", "luck.html", "nav.html", "footer.html",
-		"download_left.html", "download_right.html", "download_right2.html", "upload_frame.html", "chat.html", "chat_login.html",
+		"download_left.html", "download_right.html", "download_right2.html", "upload_frame.html", "chat.html", "chat_http.html", "chat_login.html",
 		"chat_nav.html", "chat_room.html", "chat_left.html"}
 	makePath(htmls, assetDir)
 	router.LoadHTMLFiles(htmls...)
@@ -210,11 +210,21 @@ func main() {
 			}
 		*/
 		log.Println("*********************", historyMsg)
-		c.HTML(http.StatusOK, "chat.html", gin.H{
-			"roomname": roomname,
-			"username": username,
-			"chatmsg":  historyMsg,
-		})
+
+		if *modeFlag == "debug" {
+			c.HTML(http.StatusOK, "chat_http.html", gin.H{
+				"roomname": roomname,
+				"username": username,
+				"chatmsg":  historyMsg,
+			})
+		} else {
+			c.HTML(http.StatusOK, "chat.html", gin.H{
+				"roomname": roomname,
+				"username": username,
+				"chatmsg":  historyMsg,
+			})
+		}
+
 	})
 
 	router.GET("/wschat/:roomname", func(c *gin.Context) {

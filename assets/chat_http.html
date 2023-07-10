@@ -78,7 +78,7 @@ $(document).ready(function(){
 	var lockReconnect = false;
 	//var url = "ws://" + window.location.host + "/wschat";
 	var roomname = $("#roomname").text();
-	var url = "wss://" + window.location.host + "/wschat/" + roomname;
+	var url = "ws://" + window.location.host + "/wschat/" + roomname;
 	var ws;
 	createWebSocket();
 	setInterval(createWebSocket, 30000)
@@ -186,7 +186,7 @@ $(document).ready(function(){
 		try {
 			console.log("create socket begin");
 		var roomname = $("#roomname").text();
-		var url = "wss://" + window.location.host + "/wschat/" + roomname;
+		var url = "ws://" + window.location.host + "/wschat/" + roomname;
 			if (!flagE){
 				ws = new WebSocket(url);
 				init();

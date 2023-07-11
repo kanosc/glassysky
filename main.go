@@ -200,7 +200,7 @@ func main() {
 
 		_, err = redisClient.Expire(ctx, roomk, 24*time.Hour).Result()
 		if err != nil {
-			log.Println("create room", roomname, "success", maxuser)
+			log.Println("Set expire time for room success")
 		}
 
 		if password != "" {
@@ -350,6 +350,10 @@ func main() {
 			log.Println(err.Error())
 		}
 		log.Println("inserting msg", string(msg))
+		_, err = redisClient.Expire(ctx, msgkey, 24*time.Hour).Result()
+		if err != nil {
+			log.Println("Set expire time for room success")
+		}
 
 		//m.Broadcast(msg)
 		m.BroadcastFilter(msg, func(q *melody.Session) bool {

@@ -241,6 +241,7 @@ func main() {
 			c.Abort()
 			return
 		}
+		SetCookieClient(c, "password", password, 7200)
 
 		historyMsg, err := redisClient.LRange(ctx, "chat:roomname:"+roomname+":messages", 0, -1).Result()
 		if err != nil {
@@ -271,6 +272,7 @@ func main() {
 	router.GET("/chat/:roomname", func(c *gin.Context) {
 		roomname := c.Param("roomname")
 		username, exist := c.GetQuery("username")
+		password, _ := c.Cookie("password")
 		//log.Println("********** roomname, username", roomname, username)
 		if !exist || roomname == "" {
 			c.HTML(http.StatusOK, "chat_login.html", gin.H{})
@@ -286,8 +288,9 @@ func main() {
 		}
 
 		pwd, err := redisClient.Get(ctx, "chat:roomname:"+roomname+":password").Result()
-		if err != redis.Nil {
+		if err != redis.Nil && pwd != password {
 			log.Println("password of room: " + pwd)
+			log.Println("password of in cookie: " + password)
 			c.HTML(http.StatusOK, "chat_room_login.html", gin.H{"roomname": roomname, "username": username})
 			return
 		}

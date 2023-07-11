@@ -175,7 +175,7 @@ func CookieChecker() gin.HandlerFunc {
 
 func ChatCookieChecker() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		cookie, err := c.Cookie("chatname")
+		cookie, err := c.Cookie("username")
 		log.Println("client cookie is", cookie)
 
 		if err != nil {
@@ -185,7 +185,7 @@ func ChatCookieChecker() gin.HandlerFunc {
 			c.Abort()
 			return
 		}
-		c.Set("chatname", cookie)
+		c.Set("username", cookie)
 		c.Next()
 	}
 }

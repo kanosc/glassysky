@@ -7,6 +7,7 @@ import (
 	"log"
 	"net/http"
 	"strings"
+	"time"
 
 	. "github.com/kanosc/glassysky/controller"
 
@@ -25,14 +26,22 @@ var modeFlag = flag.String("mode", "production", "usage: -mode debug|production,
 var redisClient *redis.Client
 var ctx = context.Background()
 
-func init() {
-	redisClient = redis.NewClient(&redis.Options{
-		Addr: "localhost:6379",
-		Password: "929319", // no password set
-		//Password: "myredis6379", // no password set
-		DB:       0,
-	})
-
+func redisInit() {
+	if *modeFlag == "debug" {
+		redisClient = redis.NewClient(&redis.Options{
+			Addr: "localhost:6379",
+			//Password: "929319", // no password set
+			Password: "myredis6379", // no password set
+			DB:       0,
+		})
+	} else {
+		redisClient = redis.NewClient(&redis.Options{
+			Addr:     "localhost:6379",
+			Password: "929319", // no password set
+			//Password: "myredis6379", // no password set
+			DB: 0,
+		})
+	}
 	val, err := redisClient.Get(ctx, "testLink").Result()
 	if err != nil {
 		panic(err)
@@ -78,6 +87,7 @@ func main() {
 	flag.Parse()
 	log.Println("run mode:", *modeFlag)
 	log.Println("port set:", *portFlag)
+	redisInit()
 	store := cookie.NewStore([]byte("secret"))
 	router.Use(sessions.Sessions("mysession", store))
 	router.StaticFS("/assets/", http.Dir("assets"))
@@ -89,7 +99,7 @@ func main() {
 	assetDir := "assets"
 	htmls := []string{"login.html", "download_card.html", "download_list.html", "index.html", "luck.html", "nav.html", "footer.html",
 		"download_left.html", "download_right.html", "download_right2.html", "upload_frame.html", "chat.html", "chat_http.html", "chat_login.html",
-		"chat_nav.html", "chat_room.html", "chat_left.html"}
+		"chat_nav.html", "chat_room.html", "chat_room_login.html", "chat_left.html"}
 	makePath(htmls, assetDir)
 	router.LoadHTMLFiles(htmls...)
 
@@ -111,7 +121,7 @@ func main() {
 	router.GET("/chat_login", ChatCookieChecker(), func(c *gin.Context) {
 		//c.HTML(http.StatusOK, "chat_login.html", gin.H{})
 
-		username, exist := c.Get("chatname")
+		username, exist := c.Get("username")
 		if !exist {
 			c.HTML(http.StatusOK, "chat_login.html", gin.H{})
 			return
@@ -121,6 +131,13 @@ func main() {
 		log.Println("chat rooms 1 ***************", rooms)
 		if err != nil {
 			log.Println(err.Error())
+		}
+		for _, r := range rooms {
+			_, err := redisClient.Get(ctx, "chat:roomname:"+r+":messages").Result()
+			if err == redis.Nil {
+				log.Println("room expires, start to delete ", r)
+				_ = redisClient.LRem(ctx, "chat:rooms", 1, r)
+			}
 		}
 
 		/*
@@ -136,7 +153,7 @@ func main() {
 
 	router.POST("/chat_room", func(c *gin.Context) {
 		username := c.PostForm("username")
-		SetCookieClient(c, "chatname", username, 7200)
+		SetCookieClient(c, "username", username, 7200)
 		//historyMsg, err := redisClient.LRange(ctx, "chatmsg", 0, -1).Result()
 		//if err != nil {
 		//	log.Println(err.Error())
@@ -162,8 +179,11 @@ func main() {
 	router.POST("/create_room", func(c *gin.Context) {
 		roomname := c.PostForm("roomname")
 		maxuser := c.PostForm("maxuser")
+		password := c.PostForm("password")
 
+		log.Println("################", roomname, maxuser, password)
 		roomk := "chat:roomname:" + roomname + ":messages"
+		roomp := "chat:roomname:" + roomname + ":password"
 		rooms := "chat:rooms"
 		_, err := redisClient.Get(ctx, roomk).Result()
 		if err != redis.Nil {
@@ -178,24 +198,46 @@ func main() {
 			log.Println("create room", roomname, "success", maxuser)
 		}
 
+		_, err = redisClient.Expire(ctx, roomk, 24*time.Hour).Result()
+		if err != nil {
+			log.Println("create room", roomname, "success", maxuser)
+		}
+
+		if password != "" {
+			_, err = redisClient.Set(ctx, roomp, password, 0).Result()
+			if err != nil {
+				log.Println("set password", roomp, "failed")
+			}
+			_, err = redisClient.Expire(ctx, roomp, 24*time.Hour).Result()
+			if err != nil {
+				log.Println("set expire success")
+			}
+
+			log.Println("set password", roomp, "success")
+		} else {
+			log.Println("no password for room", roomname)
+		}
+
 		_, err = redisClient.LPush(ctx, rooms, roomname).Result()
 
 		c.String(http.StatusOK, "create room seccessful")
 	})
 
-	router.GET("/chat/:roomname", func(c *gin.Context) {
+	router.POST("/chat/:roomname", ChatCookieChecker(), func(c *gin.Context) {
 		roomname := c.Param("roomname")
-		username, exist := c.GetQuery("username")
-		log.Println("********** username, roomname", roomname, username)
-		if !exist || roomname == "" {
+		password := c.PostForm("password")
+		username, _ := c.Cookie("username")
+		log.Printf("%v is logging in room [%v] with password [%v]\n", username, roomname, password)
+		if roomname == "" {
 			c.HTML(http.StatusOK, "chat_login.html", gin.H{})
 			return
 		}
 
-		_, err := redisClient.Get(ctx, "chat:roomname:"+roomname+":messages").Result()
-		if err == redis.Nil {
-			log.Println("room does not exist, return")
-			c.String(http.StatusForbidden, "room does not exist")
+		pwd, err := redisClient.Get(ctx, "chat:roomname:"+roomname+":password").Result()
+		log.Printf("password in redis %v\n", pwd)
+		if err == redis.Nil || password != pwd {
+			log.Println("password is wrong or not exist")
+			c.String(http.StatusForbidden, "password is wrong or not exist")
 			c.Abort()
 			return
 		}
@@ -209,7 +251,56 @@ func main() {
 				historyMsg[i] += "\n"
 			}
 		*/
-		log.Println("*********************", historyMsg)
+
+		if *modeFlag == "debug" {
+			c.HTML(http.StatusOK, "chat_http.html", gin.H{
+				"roomname": roomname,
+				"username": username,
+				"chatmsg":  historyMsg,
+			})
+		} else {
+			c.HTML(http.StatusOK, "chat.html", gin.H{
+				"roomname": roomname,
+				"username": username,
+				"chatmsg":  historyMsg,
+			})
+		}
+
+	})
+
+	router.GET("/chat/:roomname", func(c *gin.Context) {
+		roomname := c.Param("roomname")
+		username, exist := c.GetQuery("username")
+		//log.Println("********** roomname, username", roomname, username)
+		if !exist || roomname == "" {
+			c.HTML(http.StatusOK, "chat_login.html", gin.H{})
+			return
+		}
+
+		_, err := redisClient.Get(ctx, "chat:roomname:"+roomname+":messages").Result()
+		if err == redis.Nil {
+			log.Println("room does not exist, return")
+			c.String(http.StatusForbidden, "room does not exist")
+			c.Abort()
+			return
+		}
+
+		pwd, err := redisClient.Get(ctx, "chat:roomname:"+roomname+":password").Result()
+		if err != redis.Nil {
+			log.Println("password of room: " + pwd)
+			c.HTML(http.StatusOK, "chat_room_login.html", gin.H{"roomname": roomname, "username": username})
+			return
+		}
+
+		historyMsg, err := redisClient.LRange(ctx, "chat:roomname:"+roomname+":messages", 0, -1).Result()
+		if err != nil {
+			log.Println(err.Error())
+		}
+		/*
+			for i, _ := range historyMsg {
+				historyMsg[i] += "\n"
+			}
+		*/
 
 		if *modeFlag == "debug" {
 			c.HTML(http.StatusOK, "chat_http.html", gin.H{

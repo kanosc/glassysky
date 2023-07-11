@@ -20,10 +20,14 @@
 
             <!-- 模态框内容 -->
             <div class="modal-body">
-                <form action="/create_room" method="POST" enctype="multipart/form-data">
-                    <input class="form-control" type="text" name="roomname" placeholder="input room name"/>
+                <form action="/create_room" method="POST" enctype="multipart/form-data" class="was-validated">
+                    <input class="form-control" type="text" name="roomname" placeholder="input room name" required/>
+					<div class="valid-feedback">ok</div>
+		            <div class="invalid-feedback">please input room name</div>
 					<hr>
-                    <input class="form-control" type="text" name="maxuser" placeholder="input max users"/>
+                    <input class="form-control" type="text" name="password" placeholder="input password(optinal)"/>
+					<hr>
+                    <input class="form-control" type="text" name="maxuser" placeholder="input max users(optrinal)"/>
                     <!-- <input type="file" class="select-file" multiple="multiple" id="upload" name="upload"/> -->
 					<hr>
 					<button type="submit" class="btn btn-primary">Submit</button>

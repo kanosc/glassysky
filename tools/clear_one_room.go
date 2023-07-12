@@ -23,9 +23,6 @@ func main() {
 	if err != nil {
 		log.Println(err.Error())
 	}
-	for _, r := range rooms {
-		_, _ = redisClient.Expire(ctx, "chat:roomname:"+r+":messages", 2*time.Minute).Result()
-		log.Println("expiring", r)
-	}
+	_, _ = redisClient.Expire(ctx, "chat:roomname:"+"家"+":messages", 2*time.Second).Result()
 
 }

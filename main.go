@@ -18,6 +18,7 @@ import (
 	"github.com/olahol/melody"
 	"github.com/redis/go-redis/v9"
 	"golang.org/x/crypto/acme/autocert"
+	"encoding/hex"
 )
 
 var router = gin.Default()
@@ -241,7 +242,10 @@ func main() {
 			c.Abort()
 			return
 		}
-		SetCookieClient(c, "password", password, 7200)
+
+		roomnamestr := hex.EncodeToString([]byte(roomname))
+		log.Println("^^^^^^^^^^^^^^^^^^^^^^", roomnamestr)
+		SetCookieClient(c, roomnamestr, password, 7200)
 
 		historyMsg, err := redisClient.LRange(ctx, "chat:roomname:"+roomname+":messages", 0, -1).Result()
 		if err != nil {
@@ -271,10 +275,11 @@ func main() {
 
 	router.GET("/chat/:roomname", func(c *gin.Context) {
 		roomname := c.Param("roomname")
-		username, exist := c.GetQuery("username")
-		password, _ := c.Cookie("password")
+		username, _ := c.Cookie("username")
+		roomnamestr := hex.EncodeToString([]byte(roomname))
+		password, _ := c.Cookie(roomnamestr)
 		//log.Println("********** roomname, username", roomname, username)
-		if !exist || roomname == "" {
+		if roomname == "" {
 			c.HTML(http.StatusOK, "chat_login.html", gin.H{})
 			return
 		}

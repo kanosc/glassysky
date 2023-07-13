@@ -11,6 +11,8 @@ import (
 
 	. "github.com/kanosc/glassysky/controller"
 
+	"encoding/hex"
+
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-contrib/sessions/cookie"
 	"github.com/gin-gonic/autotls"
@@ -18,7 +20,6 @@ import (
 	"github.com/olahol/melody"
 	"github.com/redis/go-redis/v9"
 	"golang.org/x/crypto/acme/autocert"
-	"encoding/hex"
 )
 
 var router = gin.Default()
@@ -205,13 +206,9 @@ func main() {
 		}
 
 		if password != "" {
-			_, err = redisClient.Set(ctx, roomp, password, 0).Result()
+			_, err = redisClient.Set(ctx, roomp, password, 24*time.Hour).Result()
 			if err != nil {
 				log.Println("set password", roomp, "failed")
-			}
-			_, err = redisClient.Expire(ctx, roomp, 24*time.Hour).Result()
-			if err != nil {
-				log.Println("set expire success")
 			}
 
 			log.Println("set password", roomp, "success")
@@ -341,6 +338,7 @@ func main() {
 		log.Println("handling msg request 3")
 		roomname, _ := s.Keys["roomname"].(string)
 		msgkey := "chat:roomname:" + roomname + ":messages"
+		roompwd := "chat:roomname:" + roomname + ":password"
 		//	msgkey := "chat:roomname:" + "testroom" + ":messages"
 		msgCount, err := redisClient.LLen(ctx, msgkey).Result()
 		if err != nil {
@@ -360,7 +358,11 @@ func main() {
 		log.Println("inserting msg", string(msg))
 		_, err = redisClient.Expire(ctx, msgkey, 24*time.Hour).Result()
 		if err != nil {
-			log.Println("Set expire time for room success")
+			log.Println("Set expire time for room msg fail")
+		}
+		_, err = redisClient.Expire(ctx, roompwd, 24*time.Hour).Result()
+		if err != nil {
+			log.Println("Set expire time for room password fail")
 		}
 
 		//m.Broadcast(msg)

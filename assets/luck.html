@@ -10,49 +10,27 @@
     <script src="https://cdn.staticfile.org/jquery/1.10.2/jquery.min.js"></script>
 	<link rel="stylesheet" type="text/css" href="../asset/today_style.css">
 </head>
-<body>
+<body class="bg-light">
 {{ template "nav.html" . }}
-<div class="row mt-2">
-    <div class="col-sm-2">
-        <div class="container mt-3 border-end border-start">
-			<div class="list-group list-group-flush">
-                <a href="https://www.bilibili.com" class="list-group-item list-group-item-action text-center">bilibili</a>
-                <a href="https://music.163.com" class="list-group-item list-group-item-action text-center">网易云音乐</a>
-                <a href="https://www.bing.com" class="list-group-item list-group-item-action text-center">bing</a>
-                <a href="https://weread.qq.com" class="list-group-item list-group-item-action text-center">微信读书</a>
-            </div>
-        </div>
+<div class="row mt-3">
+    <div class="col-sm-4">
     </div>
-    <div class="col-sm-10 mt-3">
-		<div class="row mt-2">
-			<div class="col-sm-6">
-				<img decoding="async" class="img-fluid" src="{{ .imageURL }}" alt="Chania">
+    <div class="col-sm-4 mt-2">
+		<div class="card">
+			<img decoding="async" class="img-fluid" src="{{ .imageURL }}" alt="Chania">
+			<h4 class="card-title text-center mt-4">今日运势【{{ .title }}】</h4>
+			<div class="card-body">
+				<p>解：{{ .content }}</p>
+				<p>宜：{{ .yiThing }}</p>
+				<p>忌：{{ .buyiThing }}</p>
+				<p class="text-end">{{ .date }}</p>
 			</div>
-			<div class="col-sm-6">
-				<div class="row mt-2">
-					<div class="col-sm-3">
-					</div>
-					<div class="col-sm-6">
-						<div class="card">
-							<img decoding="async" class="img-fluid" src="{{ .imageURL }}" alt="Chania">
-							<h4 class="card-title text-center mt-4">今日运势【{{ .title }}】</h4>
-							<div class="card-body">
-								<p>解：{{ .content }}</p>
-								<p>宜：{{ .yiThing }}</p>
-								<p>忌：{{ .buyiThing }}</p>
-								<p class="text-end">{{ .date }}</p>
-							</div>
-							<button id="resetLuck" type="button" class="btn btn-primary">再抽一次</button>
-						</div>
-					</div>
-					<div class="col-sm-3">
-					</div>
-				</div>
-			</div>
+			<button id="resetLuck" type="button" class="btn btn-primary">再抽一次</button>
 		</div>
     </div>
+    <div class="col-sm-4">
+    </div>
 </div>
-{{ template "footer.html" . }}
 <!--
 <footer class="footer mt-auto py-2 fixed-bottom  bg-primary">
   <div class="container">

@@ -94,6 +94,7 @@ func main() {
 	router.Use(sessions.Sessions("mysession", store))
 	router.StaticFS("/assets/", http.Dir("assets"))
 	router.StaticFS("/resource/", http.Dir("file_storage"))
+	//router.StaticFile("/a.txt", "./a.txt")
 	router.SetFuncMap(template.FuncMap{
 		"DelPoint": DelPoint,
 	})
@@ -156,18 +157,21 @@ func main() {
 	router.POST("/chat_room", func(c *gin.Context) {
 		username := c.PostForm("username")
 		SetCookieClient(c, "username", username, 7200)
-		//historyMsg, err := redisClient.LRange(ctx, "chatmsg", 0, -1).Result()
-		//if err != nil {
-		//	log.Println(err.Error())
-		//}
-		/*
-			for i, _ := range historyMsg {
-				historyMsg[i] += "\n"
-			}
-		*/
-		//log.Println("*********************", historyMsg)
 		rooms, err := redisClient.LRange(ctx, "chat:rooms", 0, -1).Result()
 		log.Println("chat rooms 2 ***************", rooms)
+		if err != nil {
+			log.Println(err.Error())
+		}
+
+		c.HTML(http.StatusOK, "chat_room.html", gin.H{
+			"username": username,
+			"rooms":    rooms,
+		})
+	})
+
+	router.GET("/chat_room", ChatCookieChecker(), func(c *gin.Context) {
+		username,_ := c.Cookie("username")
+		rooms, err := redisClient.LRange(ctx, "chat:rooms", 0, -1).Result()
 		if err != nil {
 			log.Println(err.Error())
 		}
@@ -224,9 +228,9 @@ func main() {
 	router.POST("/chat/:roomname", ChatCookieChecker(), func(c *gin.Context) {
 		roomname := c.Param("roomname")
 		password := c.PostForm("password")
-		username, _ := c.Cookie("username")
+		username, uexist:= c.Cookie("username")
 		log.Printf("%v is logging in room [%v] with password [%v]\n", username, roomname, password)
-		if roomname == "" {
+		if roomname == "" || uexist != nil {
 			c.HTML(http.StatusOK, "chat_login.html", gin.H{})
 			return
 		}
@@ -272,11 +276,11 @@ func main() {
 
 	router.GET("/chat/:roomname", func(c *gin.Context) {
 		roomname := c.Param("roomname")
-		username, _ := c.Cookie("username")
+		username, uexist := c.Cookie("username")
 		roomnamestr := hex.EncodeToString([]byte(roomname))
 		password, _ := c.Cookie(roomnamestr)
 		//log.Println("********** roomname, username", roomname, username)
-		if roomname == "" {
+		if roomname == "" || uexist != nil {
 			c.HTML(http.StatusOK, "chat_login.html", gin.H{})
 			return
 		}

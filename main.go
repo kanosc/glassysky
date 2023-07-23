@@ -156,7 +156,7 @@ func main() {
 
 	router.POST("/chat_room", func(c *gin.Context) {
 		username := c.PostForm("username")
-		SetCookieClient(c, "username", username, 7200)
+		SetCookieClient(c, "username", username, 36000)
 		rooms, err := redisClient.LRange(ctx, "chat:rooms", 0, -1).Result()
 		log.Println("chat rooms 2 ***************", rooms)
 		if err != nil {
@@ -204,13 +204,13 @@ func main() {
 			log.Println("create room", roomname, "success", maxuser)
 		}
 
-		_, err = redisClient.Expire(ctx, roomk, 24*time.Hour).Result()
+		_, err = redisClient.Expire(ctx, roomk, 48*time.Hour).Result()
 		if err != nil {
 			log.Println("Set expire time for room success")
 		}
 
 		if password != "" {
-			_, err = redisClient.Set(ctx, roomp, password, 24*time.Hour).Result()
+			_, err = redisClient.Set(ctx, roomp, password, 48*time.Hour).Result()
 			if err != nil {
 				log.Println("set password", roomp, "failed")
 			}
@@ -246,7 +246,7 @@ func main() {
 
 		roomnamestr := hex.EncodeToString([]byte(roomname))
 		log.Println("^^^^^^^^^^^^^^^^^^^^^^", roomnamestr)
-		SetCookieClient(c, roomnamestr, password, 7200)
+		SetCookieClient(c, roomnamestr, password, 36000)
 
 		historyMsg, err := redisClient.LRange(ctx, "chat:roomname:"+roomname+":messages", 0, -1).Result()
 		if err != nil {
@@ -360,11 +360,11 @@ func main() {
 			log.Println(err.Error())
 		}
 		log.Println("inserting msg", string(msg))
-		_, err = redisClient.Expire(ctx, msgkey, 24*time.Hour).Result()
+		_, err = redisClient.Expire(ctx, msgkey, 48*time.Hour).Result()
 		if err != nil {
 			log.Println("Set expire time for room msg fail")
 		}
-		_, err = redisClient.Expire(ctx, roompwd, 24*time.Hour).Result()
+		_, err = redisClient.Expire(ctx, roompwd, 48*time.Hour).Result()
 		if err != nil {
 			log.Println("Set expire time for room password fail")
 		}

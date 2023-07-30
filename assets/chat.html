@@ -132,6 +132,7 @@ $(document).ready(function(){
 
 			// 调用函数来执行插入<p>标签的操作
 			insertParagraph();
+			chat.scrollTop = 0;
 		};
 
 		//text.onkeydown = sendMsg(e);
@@ -140,12 +141,14 @@ $(document).ready(function(){
 				//ws.send(now() + "\n" + "<" + name + "> " + text.value + "\n");
 				ws.send("<" + name + "> " + text.value + "\n");
 				text.value = "";
+				chat.scrollTop = 0;
 			}
 		};
 		$("#send").click(function() {
 			if (text.value !== "") {
 				ws.send("<" + name + "> " + text.value + "\n");
 				text.value = "";
+				chat.scrollTop = 0;
 			}
 		});
 

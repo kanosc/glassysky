@@ -11,7 +11,7 @@
 <body>
 {{ template "nav.html" . }}
 <div class="row mt-2">
-    {{ template "download_left.html" . }}
+    {{ template "download_right2.html" . }}
     <div class="col-sm-8 mt-3">
         <div class="container mt-3">
 			<!--
@@ -36,7 +36,8 @@
             {{ end }}
         </div>
     </div>
-    {{ template "download_right2.html" . }}
+	<div class="col-sm-2 mt-3">
+	</div>
 </div>
 {{ template "upload_frame.html" . }}
 <script src="../assets/download.js"></script>

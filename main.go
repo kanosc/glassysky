@@ -44,11 +44,6 @@ func redisInit() {
 			DB: 0,
 		})
 	}
-	val, err := redisClient.Get(ctx, "testLink").Result()
-	if err != nil {
-		panic(err)
-	}
-	log.Println("testLink:" + val)
 	log.Println("redis init success")
 
 }

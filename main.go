@@ -126,7 +126,6 @@ func main() {
 		}
 
 		rooms, err := redisClient.LRange(ctx, "chat:rooms", 0, -1).Result()
-		log.Println("chat rooms 1 ***************", rooms)
 		if err != nil {
 			log.Println(err.Error())
 		}
@@ -138,11 +137,6 @@ func main() {
 			}
 		}
 
-		/*
-			for i, _ := range historyMsg {
-				historyMsg[i] += "\n"
-			}
-		*/
 		c.HTML(http.StatusOK, "chat_room.html", gin.H{
 			"username": username,
 			"rooms":    rooms,
@@ -151,7 +145,7 @@ func main() {
 
 	router.POST("/chat_room", func(c *gin.Context) {
 		username := c.PostForm("username")
-		SetCookieClient(c, "username", username, 36000)
+		SetCookieClient(c, "username", username, 3600*48)
 		rooms, err := redisClient.LRange(ctx, "chat:rooms", 0, -1).Result()
 		log.Println("chat rooms 2 ***************", rooms)
 		if err != nil {
@@ -165,7 +159,7 @@ func main() {
 	})
 
 	router.GET("/chat_room", ChatCookieChecker(), func(c *gin.Context) {
-		username,_ := c.Cookie("username")
+		username, _ := c.Cookie("username")
 		rooms, err := redisClient.LRange(ctx, "chat:rooms", 0, -1).Result()
 		if err != nil {
 			log.Println(err.Error())
@@ -223,7 +217,7 @@ func main() {
 	router.POST("/chat/:roomname", ChatCookieChecker(), func(c *gin.Context) {
 		roomname := c.Param("roomname")
 		password := c.PostForm("password")
-		username, uexist:= c.Cookie("username")
+		username, uexist := c.Cookie("username")
 		log.Printf("%v is logging in room [%v] with password [%v]\n", username, roomname, password)
 		if roomname == "" || uexist != nil {
 			c.HTML(http.StatusOK, "chat_login.html", gin.H{})
@@ -240,8 +234,7 @@ func main() {
 		}
 
 		roomnamestr := hex.EncodeToString([]byte(roomname))
-		log.Println("^^^^^^^^^^^^^^^^^^^^^^", roomnamestr)
-		SetCookieClient(c, roomnamestr, password, 36000)
+		SetCookieClient(c, roomnamestr, password, 3600*48)
 
 		historyMsg, err := redisClient.LRange(ctx, "chat:roomname:"+roomname+":messages", 0, -1).Result()
 		if err != nil {

@@ -203,7 +203,7 @@ func HandleVerifyAuth(c *gin.Context, name string, pwd string, next func(c *gin.
 	cookieName := clientCookieName
 	if username == name && password == pwd {
 		clientUUID, _ := uuid.NewUUID()
-		SetCookieDefault(c, cookieName, clientUUID.String(), 1800)
+		SetCookieDefault(c, cookieName, clientUUID.String(), 3600*48)
 		next(c)
 	} else {
 		c.String(http.StatusForbidden, fmt.Sprintf("Name or password is wrong"))

@@ -97,7 +97,7 @@ func main() {
 	assetDir := "assets"
 	htmls := []string{"login.html", "download_card.html", "download_list.html", "index.html", "luck.html", "nav.html", "footer.html",
 		"download_left.html", "download_right.html", "download_right2.html", "upload_frame.html", "chat.html", "chat_http.html", "chat_login.html",
-		"chat_nav.html", "chat_room.html", "chat_room_login.html", "chat_left.html"}
+		"chat_nav.html", "chat_room.html", "chat_room_login.html", "chat_left.html", "chat_meta.html"}
 	makePath(htmls, assetDir)
 	router.LoadHTMLFiles(htmls...)
 

@@ -218,10 +218,10 @@ func HandleUpload(c *gin.Context) {
 	form, _ := c.MultipartForm()
 	files := form.File["upload"]
 	if len(files) == 0 {
+		log.Println("number of file is 0")
 		c.String(http.StatusForbidden, fmt.Sprintf("No file recieved, please select files."))
 		c.Abort()
 		return
-		log.Println("number of file is 0")
 
 	}
 	log.Printf("%d files recieved", len(files))
@@ -265,13 +265,19 @@ func HandleDownload_card(c *gin.Context) {
 	log.Println("recive request")
 	var files = []string{}
 	err := filepath.Walk("./file_storage/", func(_ string, info os.FileInfo, err error) error {
+		if info == nil {
+			return err
+		}
 		if !info.IsDir() {
+
 			files = append(files, info.Name())
 		}
 		return err
 	})
 	if err != nil {
 		log.Println(err.Error())
+		c.String(http.StatusInternalServerError, fmt.Sprintf("An error occured when reading server files"))
+		c.Abort()
 	}
 	c.HTML(http.StatusOK, "download_card.html", gin.H{
 		"files": files,
@@ -283,6 +289,9 @@ func HandleDownload_list(c *gin.Context) {
 	log.Println("recive request")
 	var files = []string{}
 	err := filepath.Walk("./file_storage/", func(_ string, info os.FileInfo, err error) error {
+		if info == nil {
+			return err
+		}
 		if !info.IsDir() {
 			files = append(files, info.Name())
 		}
@@ -290,6 +299,10 @@ func HandleDownload_list(c *gin.Context) {
 	})
 	if err != nil {
 		log.Println(err.Error())
+		c.String(http.StatusInternalServerError, fmt.Sprintf("An error occured when reading server files"))
+		c.Abort()
+		return
+
 	}
 	c.HTML(http.StatusOK, "download_list.html", gin.H{
 		"files": files,

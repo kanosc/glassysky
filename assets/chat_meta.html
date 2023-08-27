@@ -1,0 +1,32 @@
+<span id="username" hidden>{{ .username }}</span>
+<span id="roomname" hidden>{{ .roomname }}</span>
+<div class="container-fluid mt-2">
+    <div class="container mb-3" id="main">
+        <div class="container-fluid mt-2 mb-3">
+			<div class="clearfix">
+				<span class="float-start"><h3 class="text-white">{{ .roomname }}</h3></span>
+				<span class="float-end"><button class="btn btn-danger btn-sm" id="quit">退出房间</button></span>
+			</div>
+			<div class="input-group mt-2">
+				<input placeholder="say something" id="text" type="text" class="form-control">
+				<span class="input-group-text bg-primary text-white" id="send">发&nbsp;送</span>
+				<span class="input-group-text bg-info text-white" id="refresh">刷&nbsp;新</span>
+				<!-- <span class="input-group-text bg-danger text-white" id="quit">退&nbsp;出</span> -->
+			</div>
+        </div>
+		<div class="container mt-3 mb-5">
+			<!--<pre id="chat" class="text-justify">{{ range .chatmsg }}{{ . }}{{ end }}
+			</pre>-->
+			<div id="chat" class="text-justify scrollable">
+				{{ range .chatmsg }}
+				<!--<p class="text-muted">
+				{{ . }}
+				</p>-->
+				<div class="alert alert-success" role="alert">
+				{{ . }}
+				</div>
+				{{ end }}
+			</div>
+		</div>
+    </div>
+</div>
